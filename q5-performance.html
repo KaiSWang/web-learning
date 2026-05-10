@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q5 — 為什麼有些網站打開超慢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Q · 05</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Q · 05 · Performance Diagnosis
+    </div>
+    <h1>網站<em>慢</em>，<br>到底慢在<em>哪一步</em>？</h1>
+    <p class="hero-sub">
+      使用者只感覺「這網站好慢」，但工程師需要精確定位：是 DNS 慢？伺服器慢？資源太大？JS 執行卡？
+      Google 為了量化這件事，定義了 <strong style="color:var(--ink)">Core Web Vitals</strong>——三個關鍵指標。
+    </p>
+  </div>
+</section>
+
+<!-- 效能指標 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Core Web Vitals · 三大核心指標</div>
+    <h2>Google 怎麼<em>量化</em>網站速度？</h2>
+    <p class="lead">
+      Google 從 2020 開始強推 <strong>Core Web Vitals</strong>，把使用者體驗拆成三個維度：
+      載入速度（LCP）、互動回應（INP）、視覺穩定（CLS）。這些指標也會影響 SEO 排名。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 一次頁面載入的時間軸與關鍵指標</div>
+      <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- 時間軸 -->
+        <line x1="60" y1="100" x2="840" y2="100" stroke="#2a3450" stroke-width="2"/>
+
+        <!-- 時間刻度 -->
+        <text x="60" y="85" fill="#6b7590" font-family="JetBrains Mono" font-size="10">0s</text>
+        <text x="840" y="85" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="end">5s</text>
+
+        <!-- TTFB -->
+        <line x1="60" y1="100" x2="180" y2="100" stroke="#fbbf24" stroke-width="3"/>
+        <line x1="180" y1="90" x2="180" y2="120" stroke="#fbbf24" stroke-width="2"/>
+        <text x="120" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">TTFB</text>
+        <text x="120" y="150" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 0.6s</text>
+
+        <!-- FCP -->
+        <line x1="60" y1="100" x2="280" y2="100" stroke="#60a5fa" stroke-width="3" opacity="0.5"/>
+        <line x1="280" y1="80" x2="280" y2="120" stroke="#60a5fa" stroke-width="2"/>
+        <text x="280" y="170" fill="#60a5fa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">FCP</text>
+        <text x="280" y="185" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 1.4s</text>
+
+        <!-- LCP -->
+        <line x1="60" y1="100" x2="450" y2="100" stroke="#4ade80" stroke-width="3" opacity="0.3"/>
+        <line x1="450" y1="70" x2="450" y2="130" stroke="#4ade80" stroke-width="3"/>
+        <text x="450" y="55" fill="#4ade80" font-family="JetBrains Mono" font-size="11" text-anchor="middle" font-weight="600">LCP ★</text>
+        <text x="450" y="200" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Largest Contentful Paint</text>
+        <text x="450" y="215" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 2.5s（最大內容渲染完）</text>
+
+        <!-- TTI -->
+        <line x1="600" y1="80" x2="600" y2="120" stroke="#c084fc" stroke-width="2"/>
+        <text x="600" y="170" fill="#c084fc" font-family="JetBrains Mono" font-size="10" text-anchor="middle">TTI</text>
+        <text x="600" y="185" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 3.8s（可互動）</text>
+
+        <!-- 階段背景 -->
+        <rect x="60" y="240" width="120" height="40" fill="rgba(251,191,36,0.15)" rx="2"/>
+        <text x="120" y="265" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">伺服器處理</text>
+
+        <rect x="180" y="240" width="100" height="40" fill="rgba(96,165,250,0.15)" rx="2"/>
+        <text x="230" y="265" fill="#60a5fa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">解析+樣式</text>
+
+        <rect x="280" y="240" width="170" height="40" fill="rgba(74,222,128,0.15)" rx="2"/>
+        <text x="365" y="265" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">渲染主要內容</text>
+
+        <rect x="450" y="240" width="150" height="40" fill="rgba(192,132,252,0.15)" rx="2"/>
+        <text x="525" y="265" fill="#c084fc" font-family="JetBrains Mono" font-size="10" text-anchor="middle">JS 載入+執行</text>
+
+        <rect x="600" y="240" width="240" height="40" fill="rgba(255,107,74,0.15)" rx="2"/>
+        <text x="720" y="265" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">完全互動就緒</text>
+
+        <!-- 指標解說區 -->
+        <rect x="40" y="320" width="260" height="140" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="170" y="345" fill="#4ade80" font-family="JetBrains Mono" font-size="11" text-anchor="middle">LCP · 載入速度</text>
+        <text x="60" y="370" fill="#e8eaf0" font-family="Noto Sans TC" font-size="12">最大內容元素出現時間</text>
+        <text x="60" y="395" fill="#4ade80" font-family="JetBrains Mono" font-size="10">優: &lt; 2.5s</text>
+        <text x="60" y="412" fill="#fbbf24" font-family="JetBrains Mono" font-size="10">需改善: 2.5-4s</text>
+        <text x="60" y="429" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10">差: &gt; 4s</text>
+        <text x="60" y="450" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9">優化：CDN、圖片壓縮、SSR</text>
+
+        <rect x="320" y="320" width="260" height="140" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="450" y="345" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" text-anchor="middle">INP · 互動回應</text>
+        <text x="340" y="370" fill="#e8eaf0" font-family="Noto Sans TC" font-size="12">點擊到畫面回應的延遲</text>
+        <text x="340" y="395" fill="#4ade80" font-family="JetBrains Mono" font-size="10">優: &lt; 200ms</text>
+        <text x="340" y="412" fill="#fbbf24" font-family="JetBrains Mono" font-size="10">需改善: 200-500ms</text>
+        <text x="340" y="429" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10">差: &gt; 500ms</text>
+        <text x="340" y="450" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9">優化：減少主執行緒阻塞</text>
+
+        <rect x="600" y="320" width="260" height="140" fill="#1a2238" stroke="#c084fc" rx="4"/>
+        <text x="730" y="345" fill="#c084fc" font-family="JetBrains Mono" font-size="11" text-anchor="middle">CLS · 視覺穩定</text>
+        <text x="620" y="370" fill="#e8eaf0" font-family="Noto Sans TC" font-size="12">元素「跳來跳去」程度</text>
+        <text x="620" y="395" fill="#4ade80" font-family="JetBrains Mono" font-size="10">優: &lt; 0.1</text>
+        <text x="620" y="412" fill="#fbbf24" font-family="JetBrains Mono" font-size="10">需改善: 0.1-0.25</text>
+        <text x="620" y="429" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10">差: &gt; 0.25</text>
+        <text x="620" y="450" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9">優化：圖片設尺寸、字體預載</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 為什麼會慢 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Common Causes · 常見的慢點</div>
+    <h2>網頁卡頓的<em>典型原因</em></h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">1</div>
+        <div class="step-content">
+          <h3>TTFB 太久 · 伺服器慢</h3>
+          <div class="step-sub">Time To First Byte</div>
+          <p>
+            從發出請求到收到第一個 byte 的時間。如果這段太久，後面再怎麼優化都沒用。
+            常見原因：資料庫查詢慢、伺服器離使用者遠、沒用 CDN、伺服器負載高。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">改善方向</div>
+            <ul>
+              <li><strong>用 CDN</strong>讓使用者連到最近的節點</li>
+              <li><strong>SSG / Edge</strong>把渲染移到邊緣或建置期</li>
+              <li><strong>資料庫優化</strong>加索引、查詢快取</li>
+              <li><strong>水平擴展</strong>多開幾台應用伺服器</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2</div>
+        <div class="step-content">
+          <h3>資源太大 · 圖片、JS、字體</h3>
+          <p>
+            首頁 HTML 才幾 KB，但圖片動輒幾 MB。一張未壓縮的相機原圖可能 10MB+，
+            手機 4G 要下載好幾秒。JS bundle 也經常臃腫——一個 React 網站 main.js 動輒 500KB+。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">改善方向</div>
+            <ul>
+              <li><strong>圖片格式</strong>用 WebP / AVIF 取代 JPG/PNG（同畫質減 30%~80%）</li>
+              <li><strong>Lazy Loading</strong>滑到才載入（&lt;img loading="lazy"&gt;）</li>
+              <li><strong>Code Splitting</strong>JS 拆成小塊，按需載入</li>
+              <li><strong>Tree Shaking</strong>移除沒用到的程式碼</li>
+              <li><strong>字體子集化</strong>只載入網頁實際用到的字</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3</div>
+        <div class="step-content">
+          <h3>渲染阻塞 · CSS 和 JS 擋路</h3>
+          <p>
+            <code>&lt;link rel="stylesheet"&gt;</code> 和 <code>&lt;script&gt;</code>
+            預設會阻塞渲染——瀏覽器要等它們下載完才能繼續。網路慢時這影響很大。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 阻塞渲染</span><br>
+&lt;link rel=<span style="color:#fbbf24">"stylesheet"</span> href=<span style="color:#fbbf24">"big.css"</span>&gt;<br>
+&lt;script src=<span style="color:#fbbf24">"big.js"</span>&gt;&lt;/script&gt;<br><br>
+<span class="comment"># 不阻塞</span><br>
+&lt;link rel=<span style="color:#fbbf24">"preload"</span> as=<span style="color:#fbbf24">"style"</span> href=<span style="color:#fbbf24">"big.css"</span>&gt;<br>
+&lt;script src=<span style="color:#fbbf24">"big.js"</span> <span class="key">defer</span>&gt;&lt;/script&gt;<br>
+&lt;script src=<span style="color:#fbbf24">"analytics.js"</span> <span class="key">async</span>&gt;&lt;/script&gt;
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">4</div>
+        <div class="step-content">
+          <h3>主執行緒阻塞 · INP 變差</h3>
+          <p>
+            JS 執行佔用主執行緒太久，使用者點按鈕沒反應（因為主執行緒還在跑前一個任務）。
+            這在大型 React 應用很常見。解法見 Q1 的「Web Worker、避免 Layout Thrashing」。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">5</div>
+        <div class="step-content">
+          <h3>CLS · 元素亂跳</h3>
+          <p>
+            最常見原因：<strong>圖片沒設定尺寸</strong>。HTML 載入時不知道圖片多高，先空著，
+            等圖片下載完成才把空間「擠出來」，導致下方所有內容往下跳——使用者剛要點某個按鈕，按鈕跳走了。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># ❌ 沒設尺寸</span><br>
+&lt;img src=<span style="color:#fbbf24">"photo.jpg"</span>&gt;<br><br>
+<span class="comment"># ✓ 設尺寸（瀏覽器先預留空間）</span><br>
+&lt;img src=<span style="color:#fbbf24">"photo.jpg"</span> <span class="key">width=</span><span style="color:#fbbf24">"800"</span> <span class="key">height=</span><span style="color:#fbbf24">"600"</span>&gt;
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 診斷工具 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Tools · 診斷工具</div>
+    <h2>怎麼<em>找出問題</em>？</h2>
+
+    <div class="tech-callout">
+      <div class="ct-label">必備工具</div>
+      <ul>
+        <li><strong>Chrome DevTools Performance</strong>錄製一段時間的所有活動，看 timeline</li>
+        <li><strong>Network 面板</strong>看每個資源的 waterfall（瀑布圖）</li>
+        <li><strong>Lighthouse</strong>內建在 DevTools，產生效能報告 + 優化建議</li>
+        <li><strong>WebPageTest</strong>第三方測試，可選不同地區、不同網速</li>
+        <li><strong>PageSpeed Insights</strong>Google 官方工具，整合 Core Web Vitals</li>
+        <li><strong>RUM</strong>Real User Monitoring，蒐集真實使用者數據（如 Sentry、Datadog）</li>
+      </ul>
+    </div>
+
+    <p style="font-size:15px;color:var(--ink-2);margin-top:24px;line-height:1.8;">
+      實務經驗：<strong style="color:var(--accent)">先用 Lighthouse 跑一輪</strong>，它會列出最影響分數的問題。
+      逐一解決後再用 Performance 面板看細節。最後上線後用 RUM 監控真實使用者體驗——
+      實驗室數據常常比真實使用者快很多（因為真實使用者用爛網路、舊手機）。
+    </p>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="q4-personalization.html" class="nav-card prev">
+        <div class="label">上一章 Q4</div>
+        <h4>個人化推薦</h4>
+        <p>同個網址人人不同畫面</p>
+      </a>
+      <a href="q6-security.html" class="nav-card next">
+        <div class="label">下一章 Q6</div>
+        <h4>網站攻擊面</h4>
+        <p>XSS、CSRF、SQL Injection</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">Web Atlas · Q5 · Performance</div></footer>
+
+</body>
+</html>

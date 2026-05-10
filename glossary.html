@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary — 縮寫對照表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .gloss-section { margin-top: 48px; }
+  .gloss-section:first-of-type { margin-top: 0; }
+  .gloss-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html" class="active">縮寫表</a>
+      </nav>
+      <span>Appendix</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Appendix · Glossary
+    </div>
+    <h1>所有<em>縮寫術語</em><br>一次查清楚</h1>
+    <p class="hero-sub">
+      Web 領域充滿縮寫。這份對照表收集了本系列出現過的所有縮寫，按主題分類。
+      讀任何章節時看到不熟的縮寫，回來這頁查一下就知道是什麼。
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- 網路協定 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 網路協定 · Protocols</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">HTTP</div>
+          <div class="full-name">HyperText Transfer Protocol</div>
+          <div class="desc">網頁通訊的基礎協定，請求-回應模型</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">HTTPS</div>
+          <div class="full-name">HTTP Secure</div>
+          <div class="desc">HTTP + TLS 加密版本，網址前面有 🔒</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">TCP</div>
+          <div class="full-name">Transmission Control Protocol</div>
+          <div class="desc">確保資料可靠送達的傳輸協定，三次握手</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">UDP</div>
+          <div class="full-name">User Datagram Protocol</div>
+          <div class="desc">較快但不可靠的傳輸協定，遊戲、串流用</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">TLS</div>
+          <div class="full-name">Transport Layer Security</div>
+          <div class="desc">傳輸層加密協定，舊名 SSL</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SSL</div>
+          <div class="full-name">Secure Sockets Layer</div>
+          <div class="desc">TLS 的舊稱，現在多指 SSL/TLS 憑證</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">DNS</div>
+          <div class="full-name">Domain Name System</div>
+          <div class="desc">把網域名稱（google.com）翻譯成 IP 的系統</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">IP</div>
+          <div class="full-name">Internet Protocol</div>
+          <div class="desc">網路定位協定，每台機器有獨特 IP 位址</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">ISP</div>
+          <div class="full-name">Internet Service Provider</div>
+          <div class="desc">網路服務供應商，如中華電信、Hinet</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">TTL</div>
+          <div class="full-name">Time To Live</div>
+          <div class="desc">DNS / 快取的存活時間</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CDN</div>
+          <div class="full-name">Content Delivery Network</div>
+          <div class="desc">分散全球的快取網路（Cloudflare 等）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">PoP</div>
+          <div class="full-name">Point of Presence</div>
+          <div class="desc">CDN 的邊緣節點</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 前端技術 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 前端技術 · Frontend</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">HTML</div>
+          <div class="full-name">HyperText Markup Language</div>
+          <div class="desc">網頁結構標記語言</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CSS</div>
+          <div class="full-name">Cascading Style Sheets</div>
+          <div class="desc">樣式語言，控制網頁外觀</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">JS</div>
+          <div class="full-name">JavaScript</div>
+          <div class="desc">瀏覽器內的程式語言，負責互動</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">DOM</div>
+          <div class="full-name">Document Object Model</div>
+          <div class="desc">HTML 解析後的物件樹，JS 操作的對象</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CSSOM</div>
+          <div class="full-name">CSS Object Model</div>
+          <div class="desc">CSS 解析後的物件樹</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SPA</div>
+          <div class="full-name">Single-Page Application</div>
+          <div class="desc">單頁應用，靠 JS 切換內容不重整</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">MPA</div>
+          <div class="full-name">Multi-Page Application</div>
+          <div class="desc">多頁式應用，每次點連結重新載入</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SSR</div>
+          <div class="full-name">Server-Side Rendering</div>
+          <div class="desc">伺服器端渲染，每次請求即時產生 HTML</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SSG</div>
+          <div class="full-name">Static Site Generation</div>
+          <div class="desc">建置時就產生好靜態 HTML（最快）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CSR</div>
+          <div class="full-name">Client-Side Rendering</div>
+          <div class="desc">瀏覽器端渲染，傳統 SPA 模式</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SEO</div>
+          <div class="full-name">Search Engine Optimization</div>
+          <div class="desc">搜尋引擎優化，讓 Google 容易讀懂頁面</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">PWA</div>
+          <div class="full-name">Progressive Web App</div>
+          <div class="desc">可離線運作、可裝到手機主畫面的網頁</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">RWD</div>
+          <div class="full-name">Responsive Web Design</div>
+          <div class="desc">響應式設計，一份程式碼適應所有螢幕</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">a11y</div>
+          <div class="full-name">Accessibility</div>
+          <div class="desc">無障礙，讓有障礙的使用者也能用</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API 與資料 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ API 與資料 · APIs & Data</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">API</div>
+          <div class="full-name">Application Programming Interface</div>
+          <div class="desc">應用程式介面，後端開放給前端呼叫的入口</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">REST</div>
+          <div class="full-name">Representational State Transfer</div>
+          <div class="desc">主流的 API 設計風格，用 HTTP 動詞操作資源</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">GraphQL</div>
+          <div class="full-name">Graph Query Language</div>
+          <div class="desc">Facebook 開發的查詢語言，前端決定要拿什麼欄位</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">JSON</div>
+          <div class="full-name">JavaScript Object Notation</div>
+          <div class="desc">資料交換格式，現代 API 主流</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">XML</div>
+          <div class="full-name">eXtensible Markup Language</div>
+          <div class="desc">較舊的資料格式，仍用於某些企業系統</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">AJAX</div>
+          <div class="full-name">Asynchronous JavaScript and XML</div>
+          <div class="desc">非同步請求技術，現代多用 fetch 取代</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SQL</div>
+          <div class="full-name">Structured Query Language</div>
+          <div class="desc">關聯式資料庫的查詢語言</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">NoSQL</div>
+          <div class="full-name">Not Only SQL</div>
+          <div class="desc">非關聯式資料庫的統稱</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">ORM</div>
+          <div class="full-name">Object-Relational Mapping</div>
+          <div class="desc">用程式物件操作資料庫的工具</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CRUD</div>
+          <div class="full-name">Create, Read, Update, Delete</div>
+          <div class="desc">資料操作的四個基本動作</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 認證與安全 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 認證與安全 · Auth & Security</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">OAuth</div>
+          <div class="full-name">Open Authorization</div>
+          <div class="desc">授權協定（不是認證），「用 Google 登入」用的就是這個</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">OIDC</div>
+          <div class="full-name">OpenID Connect</div>
+          <div class="desc">在 OAuth 上加上身份識別的標準</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SSO</div>
+          <div class="full-name">Single Sign-On</div>
+          <div class="desc">單一登入，登入一次多服務通用</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">JWT</div>
+          <div class="full-name">JSON Web Token</div>
+          <div class="desc">把使用者資訊編碼進 token 的格式</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">2FA</div>
+          <div class="full-name">Two-Factor Authentication</div>
+          <div class="desc">雙因素驗證</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">MFA</div>
+          <div class="full-name">Multi-Factor Authentication</div>
+          <div class="desc">多因素驗證（2FA 是其中一種）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">OTP</div>
+          <div class="full-name">One-Time Password</div>
+          <div class="desc">一次性密碼（簡訊驗證碼）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">TOTP</div>
+          <div class="full-name">Time-based One-Time Password</div>
+          <div class="desc">時間型一次性密碼，Google Authenticator 用的</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">XSS</div>
+          <div class="full-name">Cross-Site Scripting</div>
+          <div class="desc">跨站腳本攻擊，注入惡意 JS 到頁面</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CSRF</div>
+          <div class="full-name">Cross-Site Request Forgery</div>
+          <div class="desc">跨站請求偽造，借用使用者身份送請求</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CORS</div>
+          <div class="full-name">Cross-Origin Resource Sharing</div>
+          <div class="desc">跨來源資源共享，瀏覽器的安全機制</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CSP</div>
+          <div class="full-name">Content Security Policy</div>
+          <div class="desc">內容安全政策，限制可載入的資源來源</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">DDoS</div>
+          <div class="full-name">Distributed Denial of Service</div>
+          <div class="desc">分散式阻斷服務攻擊，用流量灌爆網站</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">WAF</div>
+          <div class="full-name">Web Application Firewall</div>
+          <div class="desc">網頁應用程式防火牆，過濾攻擊請求</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SBOM</div>
+          <div class="full-name">Software Bill of Materials</div>
+          <div class="desc">軟體物料清單，記錄所有依賴</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 效能指標 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 效能指標 · Performance Metrics</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">TTFB</div>
+          <div class="full-name">Time To First Byte</div>
+          <div class="desc">收到第一個 byte 的時間，反映伺服器速度</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">FCP</div>
+          <div class="full-name">First Contentful Paint</div>
+          <div class="desc">第一個內容元素出現的時間</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">LCP</div>
+          <div class="full-name">Largest Contentful Paint</div>
+          <div class="desc">最大內容元素出現的時間（Core Web Vital）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CLS</div>
+          <div class="full-name">Cumulative Layout Shift</div>
+          <div class="desc">累計版面位移，元素亂跳的程度</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">INP</div>
+          <div class="full-name">Interaction to Next Paint</div>
+          <div class="desc">互動到下一次繪製的時間（取代 FID）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">FID</div>
+          <div class="full-name">First Input Delay</div>
+          <div class="desc">首次輸入延遲（已被 INP 取代）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">TTI</div>
+          <div class="full-name">Time To Interactive</div>
+          <div class="desc">頁面變得可互動的時間</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">RUM</div>
+          <div class="full-name">Real User Monitoring</div>
+          <div class="desc">真實使用者監控，蒐集生產環境數據</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 後端與基礎設施 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 後端與基礎設施 · Backend & Infrastructure</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">LB</div>
+          <div class="full-name">Load Balancer</div>
+          <div class="desc">負載均衡器，分配流量到多台伺服器</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">VM</div>
+          <div class="full-name">Virtual Machine</div>
+          <div class="desc">虛擬機，雲端伺服器的單位</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">k8s</div>
+          <div class="full-name">Kubernetes</div>
+          <div class="desc">容器調度系統，管理數百台機器</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CI</div>
+          <div class="full-name">Continuous Integration</div>
+          <div class="desc">持續整合，自動測試新程式碼</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">CD</div>
+          <div class="full-name">Continuous Deployment</div>
+          <div class="desc">持續部署，自動上線</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SaaS</div>
+          <div class="full-name">Software as a Service</div>
+          <div class="desc">軟體即服務，如 Notion、Slack</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">PaaS</div>
+          <div class="full-name">Platform as a Service</div>
+          <div class="desc">平台即服務，如 Vercel、Heroku</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">IaaS</div>
+          <div class="full-name">Infrastructure as a Service</div>
+          <div class="desc">基礎設施即服務，如 AWS EC2</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">SLA</div>
+          <div class="full-name">Service Level Agreement</div>
+          <div class="desc">服務品質協議（如 99.9% 可用性）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 即時與設計 -->
+    <div class="gloss-section">
+      <div class="gloss-section-title">▸ 其他常見縮寫 · Misc</div>
+      <div class="glossary">
+        <div class="gloss-item">
+          <div class="abbr">SSE</div>
+          <div class="full-name">Server-Sent Events</div>
+          <div class="desc">伺服器推送事件，單向即時通訊</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">UX</div>
+          <div class="full-name">User Experience</div>
+          <div class="desc">使用者體驗</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">UI</div>
+          <div class="full-name">User Interface</div>
+          <div class="desc">使用者介面</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">IA</div>
+          <div class="full-name">Information Architecture</div>
+          <div class="desc">資訊架構，頁面與內容如何分層</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">PR</div>
+          <div class="full-name">Pull Request</div>
+          <div class="desc">合併請求，Git 協作的核心動作</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">MVP</div>
+          <div class="full-name">Minimum Viable Product</div>
+          <div class="desc">最小可行產品</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">A11y / I18n</div>
+          <div class="full-name">Accessibility / Internationalization</div>
+          <div class="desc">數字代表中間字數（a-11個字母-y）</div>
+        </div>
+        <div class="gloss-item">
+          <div class="abbr">P2P</div>
+          <div class="full-name">Peer-to-Peer</div>
+          <div class="desc">點對點，不經過伺服器</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="q8-pwa.html" class="nav-card prev">
+        <div class="label">上一章 Q8</div>
+        <h4>PWA 與離線</h4>
+        <p>Service Worker、Cache、IndexedDB</p>
+      </a>
+      <a href="index.html" class="nav-card next">
+        <div class="label">回首頁</div>
+        <h4>Web Atlas Index</h4>
+        <p>看完整章節列表</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">Web Atlas · Appendix · Glossary</div></footer>
+
+</body>
+</html>

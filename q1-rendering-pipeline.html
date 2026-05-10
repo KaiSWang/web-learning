@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q1 — 60fps 的祕密</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Q · 01</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Q · 01 · Rendering Pipeline Deep
+    </div>
+    <h1>60fps 的<em>祕密</em>：<br>瀏覽器一秒能畫多少次？</h1>
+    <p class="hero-sub">
+      Option A 我們看了渲染管線的六個步驟。這一章鑽進實際運作層面：
+      為什麼網頁要追求「60fps」？瀏覽器引擎內部如何安排這些工作？
+      <strong style="color:var(--ink)">畫面卡頓</strong>究竟是哪個環節的問題？
+    </p>
+  </div>
+</section>
+
+<!-- Frame Budget -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Frame Budget · 一個畫格的預算</div>
+    <h2>每個畫格只有<em>16.67 毫秒</em></h2>
+    <p class="lead">
+      螢幕通常是 60Hz 更新率，意思是每秒重新顯示 60 次。所以每一幀（frame）只有 <code>1000ms ÷ 60 = 16.67ms</code> 的時間預算。
+      在這短短時間內，瀏覽器要做完 JS 執行、樣式計算、Layout、Paint、Composite——任何一步超時就會「掉幀」。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 一個畫格的時間軸（16.67ms）</div>
+      <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- 時間軸 -->
+        <line x1="60" y1="80" x2="840" y2="80" stroke="#2a3450" stroke-width="2"/>
+        <text x="60" y="65" fill="#6b7590" font-family="JetBrains Mono" font-size="10">0ms</text>
+        <text x="840" y="65" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="end">16.67ms</text>
+
+        <!-- 階段塊 -->
+        <rect x="60" y="80" width="200" height="40" fill="#fbbf24" rx="2"/>
+        <text x="160" y="105" fill="#0a0e1a" font-family="JetBrains Mono" font-size="11" text-anchor="middle" font-weight="600">JS 執行</text>
+
+        <rect x="260" y="80" width="80" height="40" fill="#ff6b4a" rx="2"/>
+        <text x="300" y="105" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">Style</text>
+
+        <rect x="340" y="80" width="120" height="40" fill="#ff6b4a" rx="2" opacity="0.8"/>
+        <text x="400" y="105" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">Layout</text>
+
+        <rect x="460" y="80" width="160" height="40" fill="#ff6b4a" rx="2" opacity="0.6"/>
+        <text x="540" y="105" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">Paint</text>
+
+        <rect x="620" y="80" width="120" height="40" fill="#4ade80" rx="2"/>
+        <text x="680" y="105" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">Composite</text>
+
+        <rect x="740" y="80" width="100" height="40" fill="#60a5fa" rx="2" opacity="0.5"/>
+        <text x="790" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Idle 餘裕</text>
+
+        <!-- 標示 -->
+        <line x1="160" y1="120" x2="160" y2="140" stroke="#fbbf24" stroke-width="1"/>
+        <text x="160" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~6ms</text>
+
+        <line x1="300" y1="120" x2="300" y2="140" stroke="#ff6b4a" stroke-width="1"/>
+        <text x="300" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~2ms</text>
+
+        <line x1="540" y1="120" x2="540" y2="140" stroke="#ff6b4a" stroke-width="1"/>
+        <text x="540" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~5ms</text>
+
+        <line x1="680" y1="120" x2="680" y2="140" stroke="#4ade80" stroke-width="1"/>
+        <text x="680" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~3ms</text>
+
+        <!-- 警告區 -->
+        <text x="450" y="200" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⚠ 任何一個階段超時，整幀掉，使用者看到「卡頓」</text>
+
+        <!-- 對比 -->
+        <rect x="60" y="230" width="780" height="2" fill="#2a3450"/>
+        <text x="450" y="220" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">如果 JS 執行 30ms：跨越兩幀，掉一幀</text>
+
+        <rect x="60" y="240" width="500" height="40" fill="#ff6b4a" rx="2" opacity="0.7"/>
+        <text x="310" y="265" fill="#0a0e1a" font-family="JetBrains Mono" font-size="11" text-anchor="middle" font-weight="600">JS 執行（過長 30ms）</text>
+
+        <line x1="500" y1="240" x2="500" y2="290" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="500" y="305" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">本該交一幀的時間點</text>
+      </svg>
+      <p class="diagram-caption">JS 執行佔太久 → 後面所有階段被延後 → 視覺上感覺到「滑動卡卡的」</p>
+    </div>
+
+    <div class="tech-callout">
+      <div class="ct-label">為什麼追求 60fps？</div>
+      <ul>
+        <li><strong>30fps</strong>勉強流暢，影像可接受，但互動感不佳</li>
+        <li><strong>60fps</strong>絲滑感，主流標準</li>
+        <li><strong>120fps</strong>新款 iPhone、iPad、ProMotion 螢幕（每幀只有 8.33ms）</li>
+        <li><strong>低於 24fps</strong>明顯卡頓感</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 瀏覽器引擎內部 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Engine Internals · 瀏覽器引擎內部</div>
+    <h2>瀏覽器其實是<br>很多<em>執行緒</em>在合作</h2>
+    <p class="lead">
+      你以為「瀏覽器」是一支程式？實際上現代瀏覽器是<strong>多進程多執行緒架構</strong>，
+      每個 Tab 是獨立進程，每個進程內又有多個執行緒分工。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ Chromium 多進程架構</div>
+      <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- Browser Process -->
+        <rect x="40" y="20" width="820" height="80" fill="rgba(96,165,250,0.06)" stroke="#60a5fa" stroke-dasharray="4 4" rx="4"/>
+        <text x="60" y="45" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" letter-spacing="2">BROWSER PROCESS · 主進程</text>
+        <text x="60" y="68" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11">負責 UI（網址列、書籤、分頁）、所有子進程的協調</text>
+        <text x="60" y="86" fill="#6b7590" font-family="JetBrains Mono" font-size="10">處理使用者輸入 · 視窗管理 · 子進程生命週期</text>
+
+        <!-- Renderer Processes -->
+        <rect x="40" y="120" width="500" height="280" fill="rgba(255,107,74,0.04)" stroke="#ff6b4a" stroke-dasharray="4 4" rx="4"/>
+        <text x="60" y="145" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11" letter-spacing="2">RENDERER PROCESSES · 渲染進程（每個 Tab 一個）</text>
+
+        <rect x="60" y="165" width="220" height="100" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="170" y="185" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">MAIN THREAD</text>
+        <text x="170" y="205" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">主執行緒</text>
+        <text x="170" y="225" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">JS · DOM · CSS</text>
+        <text x="170" y="243" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Layout · Paint</text>
+        <text x="170" y="258" fill="#fbbf24" font-family="JetBrains Mono" font-size="9" text-anchor="middle">⚠ 卡這就整頁卡</text>
+
+        <rect x="300" y="165" width="220" height="100" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="410" y="185" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">COMPOSITOR THREAD</text>
+        <text x="410" y="205" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">合成執行緒</text>
+        <text x="410" y="225" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">圖層合成</text>
+        <text x="410" y="243" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">處理捲動</text>
+        <text x="410" y="258" fill="#4ade80" font-family="JetBrains Mono" font-size="9" text-anchor="middle">✓ 獨立於主執行緒</text>
+
+        <rect x="60" y="280" width="220" height="100" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="170" y="300" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">RASTER THREADS</text>
+        <text x="170" y="320" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">光柵化執行緒</text>
+        <text x="170" y="340" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">把 paint 指令</text>
+        <text x="170" y="358" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">轉成像素</text>
+
+        <rect x="300" y="280" width="220" height="100" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="410" y="300" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">WORKER THREADS</text>
+        <text x="410" y="320" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Web Worker</text>
+        <text x="410" y="340" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">JS 在背景執行</text>
+        <text x="410" y="358" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">不阻塞畫面</text>
+
+        <!-- Other Processes -->
+        <rect x="560" y="120" width="300" height="280" fill="rgba(74,222,128,0.04)" stroke="#4ade80" stroke-dasharray="4 4" rx="4"/>
+        <text x="580" y="145" fill="#4ade80" font-family="JetBrains Mono" font-size="11" letter-spacing="2">OTHER PROCESSES</text>
+
+        <rect x="580" y="165" width="260" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="710" y="185" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">GPU PROCESS</text>
+        <text x="710" y="205" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">圖形處理</text>
+
+        <rect x="580" y="240" width="260" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="710" y="260" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">NETWORK PROCESS</text>
+        <text x="710" y="280" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">網路請求</text>
+
+        <rect x="580" y="315" width="260" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="710" y="335" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">UTILITY PROCESS</text>
+        <text x="710" y="355" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">音訊、儲存等</text>
+
+        <text x="450" y="430" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">分進程的好處：一個 Tab 當機不會拖垮整個瀏覽器；安全性更高（沙箱隔離）</text>
+      </svg>
+      <p class="diagram-caption">這就是為什麼 Chrome 開很多分頁吃很多 RAM——每個都是獨立進程</p>
+    </div>
+
+    <div class="tech-callout">
+      <div class="ct-label">三大瀏覽器引擎</div>
+      <ul>
+        <li><strong>Blink</strong>Google Chrome、Edge、Opera、所有 Chromium 衍生品</li>
+        <li><strong>WebKit</strong>Safari、所有 iOS 瀏覽器（Apple 強制要求）</li>
+        <li><strong>Gecko</strong>Firefox</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 優化技巧 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Optimization · 維持 60fps 的技巧</div>
+    <h2>實戰：怎麼讓網頁<em>不掉幀</em>？</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">A</div>
+        <div class="step-content">
+          <h3>動畫只用 transform 和 opacity</h3>
+          <p>
+            這兩個屬性<strong>跳過 Layout 和 Paint</strong>，直接交給 Compositor Thread。
+            其他屬性（如 left、width）會觸發整條管線重跑。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># ❌ 慢：觸發 Layout</span><br>
+element.style.<span class="warn">left</span> = <span style="color:#fbbf24">'200px'</span>;<br><br>
+<span class="comment"># ✓ 快：只觸發 Composite</span><br>
+element.style.<span class="key">transform</span> = <span style="color:#fbbf24">'translateX(200px)'</span>;
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">B</div>
+        <div class="step-content">
+          <h3>Web Worker：把重活搬出主執行緒</h3>
+          <p>
+            主執行緒一旦卡住，使用者就感覺得到。把長時間運算（解析大 JSON、加密、影像處理）丟到 Web Worker，
+            它在<strong>背景執行緒</strong>跑，不影響畫面。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 主執行緒</span><br>
+<span class="key">const</span> worker = <span class="key">new</span> Worker(<span style="color:#fbbf24">'heavy.js'</span>);<br>
+worker.postMessage(largeData);<br>
+worker.onmessage = (e) =&gt; updateUI(e.data);<br><br>
+<span class="comment"># heavy.js 在背景跑，主執行緒繼續處理使用者互動</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">C</div>
+        <div class="step-content">
+          <h3>requestAnimationFrame：跟著畫面同步</h3>
+          <p>
+            想做 JS 動畫？別用 setInterval。<code>requestAnimationFrame</code> 會在<strong>每幀開始時</strong>呼叫你的回調，
+            自動配合螢幕更新率（60Hz / 120Hz 自動適應）。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">D</div>
+        <div class="step-content">
+          <h3>避免 Layout Thrashing（Layout 抖動）</h3>
+          <p>
+            JS 中反覆「讀 layout 屬性 → 寫 layout 屬性 → 讀 → 寫」會觸發強制同步 layout，效能極差。
+            正確做法是<strong>批次讀完再批次寫</strong>。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># ❌ 抖動：每次迴圈都觸發 layout</span><br>
+<span class="key">for</span> (...) {<br>
+&nbsp;&nbsp;<span class="key">const</span> h = element.offsetHeight; <span class="comment">// 讀</span><br>
+&nbsp;&nbsp;element.style.height = h + 10 + <span style="color:#fbbf24">'px'</span>; <span class="comment">// 寫</span><br>
+}<br><br>
+<span class="comment"># ✓ 批次：先讀完再寫</span><br>
+<span class="key">const</span> heights = elements.map(el =&gt; el.offsetHeight);<br>
+elements.forEach((el, i) =&gt; el.style.height = heights[i] + 10 + <span style="color:#fbbf24">'px'</span>);
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">E</div>
+        <div class="step-content">
+          <h3>Virtual List：只 render 看得到的東西</h3>
+          <p>
+            列表有 1 萬筆資料？實際 DOM 上不需要 1 萬個節點。
+            「<strong>虛擬列表</strong>」只渲染目前在視窗內的 20 筆，捲動時動態替換內容。
+            這是 LINE 聊天列表、IG 動態的底層技術。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="opt-d-fullstack.html" class="nav-card prev">
+        <div class="label">上一章 Option D</div>
+        <h4>全端地圖</h4>
+        <p>從鍵盤到硬碟</p>
+      </a>
+      <a href="q2-cdn.html" class="nav-card next">
+        <div class="label">下一章 Q2</div>
+        <h4>CDN 與邊緣運算</h4>
+        <p>跨國網站為什麼還很快</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">Web Atlas · Q1 · 60fps Secrets</div></footer>
+
+</body>
+</html>

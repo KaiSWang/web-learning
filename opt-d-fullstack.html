@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option D — 全端地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Option D</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Option D · Full Stack Map
+    </div>
+    <h1>從你按下鍵盤，<br>到資料寫入硬碟，<br><em>整條鏈一次看完</em></h1>
+    <p class="hero-sub">
+      前面我們分別看過了瀏覽器（Vol.02、Option A）、認證（Option B）、後端（Option C）。
+      這一章把所有東西整合成一張<strong>全端地圖</strong>——
+      從你打字輸入「我是 KS」按下儲存，到這串文字真的躺在某個機房的硬碟裡，中間每一個環節怎麼接力。
+    </p>
+  </div>
+</section>
+
+<!-- 全端地圖 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">The Full Stack · 完整地圖</div>
+    <h2>一個 Web App 的<em>所有層級</em></h2>
+    <p class="lead">
+      下面這張圖把所有層級都畫出來，從你眼前的瀏覽器一直到實體硬碟。
+      每一層都有它存在的理由——<strong>解決前一層解決不了的問題</strong>。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ Full Stack 全景</div>
+      <svg viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="fsAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <!-- 前端層 -->
+        <rect x="20" y="20" width="860" height="180" fill="rgba(96,165,250,0.04)" stroke="#60a5fa" stroke-dasharray="4 4" rx="4"/>
+        <text x="40" y="45" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" letter-spacing="2">FRONTEND · 前端（瀏覽器內）</text>
+
+        <rect x="60" y="65" width="180" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="150" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">UI 元件</text>
+        <text x="150" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">React / Vue 元件</text>
+
+        <rect x="270" y="65" width="180" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="360" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">狀態管理</text>
+        <text x="360" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Redux / Pinia / Zustand</text>
+
+        <rect x="480" y="65" width="180" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="570" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">路由</text>
+        <text x="570" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">React Router / Vue Router</text>
+
+        <rect x="690" y="65" width="180" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="780" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">API 客戶端</text>
+        <text x="780" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Fetch / Axios / SWR</text>
+
+        <rect x="60" y="130" width="390" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="255" y="150" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">瀏覽器原生能力</text>
+        <text x="255" y="168" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">DOM · CSSOM · Web APIs · Cookie · LocalStorage</text>
+
+        <rect x="480" y="130" width="390" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="675" y="150" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">建置工具</text>
+        <text x="675" y="168" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Webpack · Vite · Babel · TypeScript</text>
+
+        <!-- 網路層 -->
+        <rect x="20" y="220" width="860" height="100" fill="rgba(255,107,74,0.04)" stroke="#ff6b4a" stroke-dasharray="4 4" rx="4"/>
+        <text x="40" y="245" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11" letter-spacing="2">NETWORK · 網路傳輸</text>
+
+        <rect x="60" y="265" width="200" height="40" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="160" y="290" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">HTTPS · HTTP/2 · HTTP/3</text>
+
+        <rect x="290" y="265" width="200" height="40" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="390" y="290" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">DNS · CDN · TLS</text>
+
+        <rect x="520" y="265" width="200" height="40" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="620" y="290" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">WebSocket · SSE · WebRTC</text>
+
+        <rect x="750" y="265" width="120" height="40" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="810" y="290" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">REST / GraphQL</text>
+
+        <!-- 後端 -->
+        <rect x="20" y="340" width="860" height="220" fill="rgba(74,222,128,0.04)" stroke="#4ade80" stroke-dasharray="4 4" rx="4"/>
+        <text x="40" y="365" fill="#4ade80" font-family="JetBrains Mono" font-size="11" letter-spacing="2">BACKEND · 後端（伺服器集群）</text>
+
+        <rect x="60" y="385" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="150" y="405" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">CDN 邊緣</text>
+        <text x="150" y="423" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Cloudflare / CloudFront</text>
+
+        <rect x="270" y="385" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="360" y="405" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Load Balancer</text>
+        <text x="360" y="423" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Nginx / ALB</text>
+
+        <rect x="480" y="385" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="570" y="405" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">API Gateway</text>
+        <text x="570" y="423" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Kong / AWS API GW</text>
+
+        <rect x="690" y="385" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="780" y="405" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Auth Service</text>
+        <text x="780" y="423" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Auth0 / Cognito</text>
+
+        <rect x="60" y="450" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="150" y="470" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">微服務 #1</text>
+        <text x="150" y="488" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">User Service</text>
+
+        <rect x="270" y="450" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="360" y="470" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">微服務 #2</text>
+        <text x="360" y="488" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Order Service</text>
+
+        <rect x="480" y="450" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="570" y="470" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">微服務 #3</text>
+        <text x="570" y="488" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Payment Service</text>
+
+        <rect x="690" y="450" width="180" height="50" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="780" y="470" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Workers</text>
+        <text x="780" y="488" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">背景任務</text>
+
+        <rect x="60" y="515" width="810" height="35" fill="#0a0e1a" stroke="#4ade80" rx="4"/>
+        <text x="465" y="538" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">↑ 用 gRPC / Message Queue / REST 互相溝通</text>
+
+        <!-- 資料層 -->
+        <rect x="20" y="580" width="860" height="160" fill="rgba(251,191,36,0.04)" stroke="#fbbf24" stroke-dasharray="4 4" rx="4"/>
+        <text x="40" y="605" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" letter-spacing="2">DATA · 資料層</text>
+
+        <rect x="60" y="625" width="180" height="50" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="150" y="645" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">主資料庫</text>
+        <text x="150" y="663" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">PostgreSQL</text>
+
+        <rect x="270" y="625" width="180" height="50" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="360" y="645" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">快取</text>
+        <text x="360" y="663" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Redis</text>
+
+        <rect x="480" y="625" width="180" height="50" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="570" y="645" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">物件儲存</text>
+        <text x="570" y="663" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">S3 / Cloudflare R2</text>
+
+        <rect x="690" y="625" width="180" height="50" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="780" y="645" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">搜尋引擎</text>
+        <text x="780" y="663" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Elasticsearch</text>
+
+        <rect x="60" y="690" width="810" height="40" fill="#0a0e1a" stroke="#fbbf24" rx="4"/>
+        <text x="465" y="715" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⬇ 最終資料持久化在實體硬碟（SSD / 磁帶 / 雲端 Storage）</text>
+      </svg>
+      <p class="diagram-caption">每一層都有專業分工。小公司一個人寫全部，大公司每層都有專責團隊。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 端對端追蹤 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">End to End · 端對端追蹤</div>
+    <h2>實際寫一筆資料：<br><em>從鍵盤到硬碟</em></h2>
+    <p class="lead">
+      具體場景：你在某個社群網站發文「今天天氣真好」，按下「發布」。
+      下面是這個文字字串走過的所有環節。
+    </p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">1</div>
+        <div class="step-content">
+          <h3>瀏覽器層：捕捉與封裝</h3>
+          <div class="step-sub">JavaScript 在前端做的事</div>
+          <p>
+            React 元件捕捉 textarea 的 onChange 事件，把文字存到 React state。
+            按下「發布」按鈕，元件呼叫 onClick handler，做<strong>前端驗證</strong>（不能空、不超過字數），
+            然後用 <code>fetch()</code> 把資料包成 JSON 送出。
+          </p>
+          <div class="flow-illustration">
+<span class="key">await</span> fetch(<span style="color:#fbbf24">'/api/posts'</span>, {<br>
+&nbsp;&nbsp;method: <span style="color:#fbbf24">'POST'</span>,<br>
+&nbsp;&nbsp;headers: { <span style="color:#fbbf24">'Authorization'</span>: <span style="color:#fbbf24">`Bearer ${jwt}`</span> },<br>
+&nbsp;&nbsp;body: JSON.stringify({ content: <span style="color:#fbbf24">'今天天氣真好'</span> })<br>
+});
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2</div>
+        <div class="step-content">
+          <h3>網路層：加密、路由</h3>
+          <p>
+            瀏覽器把這個 POST 請求<strong>用 TLS 加密</strong>，透過家中網路 → ISP → 國際線路 → 目的地機房，
+            一路上會經過很多路由器。中途如果有 CDN，會先到最近的邊緣節點，再轉發到原始伺服器。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3</div>
+        <div class="step-content">
+          <h3>邊緣層：CDN / WAF 過濾</h3>
+          <p>
+            CDN 邊緣節點先看這個請求：是惡意嗎？（<span class="acronym">WAF<span class="full">Web Application Firewall</span></span> 過濾）
+            是 DDoS 嗎？頻率正常嗎？通過了才會轉發到後端。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">4</div>
+        <div class="step-content">
+          <h3>後端入口：Load Balancer</h3>
+          <p>
+            到達機房後，Load Balancer 把這個請求分派給目前最閒的應用伺服器。同時做 SSL 終止——
+            這裡開始內部走 HTTP（內網本來就安全，省去加密成本）。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">5</div>
+        <div class="step-content">
+          <h3>API Gateway：身份驗證、路由</h3>
+          <p>
+            驗證 JWT 有效、解析出使用者身份、查 rate limit 沒超過，然後根據網址路由到正確的微服務。
+            <code>/api/posts</code> 對應 <strong>Post Service</strong>，把請求轉發過去。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">6</div>
+        <div class="step-content">
+          <h3>微服務：業務邏輯</h3>
+          <p>
+            Post Service 收到請求，做<strong>後端驗證</strong>（不要相信前端送來的資料）、
+            檢查使用者是否有發文權限、過濾敏感字、產生 ID 與時間戳，然後準備寫入資料庫。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">7</div>
+        <div class="step-content">
+          <h3>資料庫：寫入持久化儲存</h3>
+          <p>
+            ORM 把物件轉成 SQL 語句送給 PostgreSQL。資料庫先寫進<strong>WAL（Write-Ahead Log）</strong>確保不會丟失，
+            然後更新 B-Tree 索引、寫入 table。最終資料躺在實體硬碟的特定區塊。
+          </p>
+          <div class="flow-illustration">
+<span class="key">INSERT INTO</span> posts (user_id, content, created_at)<br>
+<span class="key">VALUES</span> (123, <span style="color:#fbbf24">'今天天氣真好'</span>, NOW())<br>
+<span class="key">RETURNING</span> id;<br><br>
+<span class="comment"># 同步副作用</span><br>
+- 寫入 WAL（保證 crash 後可恢復）<br>
+- 更新索引（user_id, created_at）<br>
+- 寫入 disk block<br>
+- 同步到 replica（若有設定）
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">8</div>
+        <div class="step-content">
+          <h3>非同步副作用：訊息佇列</h3>
+          <p>
+            主流程已經結束，但還有些事要做：通知粉絲、更新搜尋索引、計算熱門排行。
+            Post Service 把事件 <code>post.created</code> 丟進 Kafka，多個下游服務各自訂閱：
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">背景處理者</div>
+            <ul>
+              <li><strong>Notification Service</strong>推播給粉絲</li>
+              <li><strong>Search Service</strong>更新 Elasticsearch 索引</li>
+              <li><strong>Analytics Service</strong>記錄發文事件用於統計</li>
+              <li><strong>Trending Service</strong>更新熱門排行榜</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">9</div>
+        <div class="step-content">
+          <h3>回應路徑：原路返回</h3>
+          <p>
+            Post Service 回傳新建的 post 物件給 API Gateway → Load Balancer → 邊緣節點 → 網際網路 → 你的瀏覽器。
+            前端拿到回應後，更新本地 state，React 重新 render，畫面上多了一篇你的新貼文。
+          </p>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            整個過程通常在 <strong>100~300ms</strong> 內完成，雖然涉及十幾個系統。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 推薦的學習路徑 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Learning Path · 給韌體背景的人</div>
+    <h2>從你現有的背景<br>該<em>怎麼切入</em>？</h2>
+    <p class="lead">
+      你已經有 RTOS、事件驅動、資源管理、低層協定的底子。
+      這些對應到網頁世界，最自然的學習順序是這樣：
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 韌體 → Web 知識遷移路徑</div>
+      <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="lpAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+        </defs>
+
+        <!-- 已有 -->
+        <rect x="40" y="40" width="200" height="80" fill="#0a0e1a" stroke="#4ade80" rx="4"/>
+        <text x="140" y="65" fill="#4ade80" font-family="JetBrains Mono" font-size="11" text-anchor="middle">YOU ARE HERE</text>
+        <text x="140" y="88" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">韌體背景</text>
+        <text x="140" y="106" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">事件、低層協定、系統設計</text>
+
+        <line x1="240" y1="80" x2="288" y2="80" stroke="#4ade80" stroke-width="1.5" marker-end="url(#lpAr)"/>
+
+        <rect x="290" y="40" width="200" height="80" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="390" y="65" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle">STEP 1 · 最容易</text>
+        <text x="390" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">後端 / DevOps</text>
+        <text x="390" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">概念遷移成本最低</text>
+
+        <line x1="490" y1="80" x2="538" y2="80" stroke="#4ade80" stroke-width="1.5" marker-end="url(#lpAr)"/>
+
+        <rect x="540" y="40" width="200" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="640" y="65" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" text-anchor="middle">STEP 2 · 中等難度</text>
+        <text x="640" y="85" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">JS / TypeScript</text>
+        <text x="640" y="103" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">非同步、事件迴圈</text>
+
+        <line x1="640" y1="120" x2="640" y2="168" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lpAr)"/>
+
+        <rect x="540" y="170" width="200" height="80" fill="#1a2238" stroke="#c084fc" rx="4"/>
+        <text x="640" y="195" fill="#c084fc" font-family="JetBrains Mono" font-size="11" text-anchor="middle">STEP 3 · 最高難度</text>
+        <text x="640" y="215" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">CSS / 視覺直覺</text>
+        <text x="640" y="233" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">跟設計師合作 OK</text>
+
+        <!-- 對應關係 -->
+        <rect x="40" y="280" width="820" height="80" fill="#0a0e1a" stroke="#2a3450" rx="4"/>
+        <text x="450" y="305" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="2">⬢ 你已熟的概念，在 Web 對應到什麼</text>
+        <text x="60" y="325" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">RTOS task 切換　→　Event Loop（單執行緒非同步）</text>
+        <text x="60" y="343" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">中斷/Callback　→　Promise / async-await</text>
+        <text x="500" y="325" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">硬體寄存器　→　DOM / Web API</text>
+        <text x="500" y="343" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">狀態機　→　Redux / 狀態管理</text>
+      </svg>
+      <p class="diagram-caption">先學概念對應的東西，再學需要新直覺的東西</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="opt-c-backend.html" class="nav-card prev">
+        <div class="label">上一章 Option C</div>
+        <h4>後端視角</h4>
+        <p>請求進入伺服器之後</p>
+      </a>
+      <a href="q1-rendering-pipeline.html" class="nav-card next">
+        <div class="label">下一章 Q1</div>
+        <h4>渲染管線深入</h4>
+        <p>60fps 的祕密與瀏覽器引擎</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Web Atlas · Option D · Full Stack Map
+  </div>
+</footer>
+
+</body>
+</html>

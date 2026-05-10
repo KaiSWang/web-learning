@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q7 — WebSocket 跟 HTTP 差在哪</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Q · 07</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Q · 07 · Real-time Technologies
+    </div>
+    <h1>聊天訊息<em>秒到</em>、<br>股價<em>跳動</em>，<br>怎麼做到的？</h1>
+    <p class="hero-sub">
+      傳統 HTTP 是<strong>請求-回應</strong>模型：客戶端問才有答。
+      但聊天、即時報價、線上遊戲需要<strong style="color:var(--ink)">伺服器主動推送</strong>給客戶端——
+      這就是即時通訊的需求。Web 演進出四種解法。
+    </p>
+  </div>
+</section>
+
+<!-- HTTP 為什麼不夠 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">The Problem · HTTP 的限制</div>
+    <h2>傳統 HTTP <em>不能主動推</em></h2>
+    <p class="lead">
+      HTTP 設計上是「客戶端發起，伺服器回應」。如果伺服器有新訊息，沒辦法主動通知客戶端——
+      除非客戶端持續發問（輪詢 polling）。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 四種即時技術的時序對比</div>
+      <svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="rtAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+          <marker id="rtAr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+        </defs>
+
+        <!-- Long Polling -->
+        <text x="40" y="30" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11" letter-spacing="2">① LONG POLLING · 長輪詢（最舊）</text>
+        <line x1="80" y1="60" x2="80" y2="120" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="820" y1="60" x2="820" y2="120" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <text x="80" y="55" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">Client</text>
+        <text x="820" y="55" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">Server</text>
+
+        <line x1="80" y1="75" x2="820" y2="75" stroke="#ff6b4a" stroke-width="1" marker-end="url(#rtAr)"/>
+        <text x="450" y="71" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">請求 → 伺服器 hold 住，等到有訊息才回</text>
+
+        <line x1="820" y1="95" x2="80" y2="95" stroke="#ff6b4a" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#rtAr)"/>
+        <line x1="80" y1="115" x2="820" y2="115" stroke="#ff6b4a" stroke-width="1" marker-end="url(#rtAr)"/>
+        <text x="450" y="111" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">收到後立刻再發新請求（不斷重複）</text>
+
+        <!-- SSE -->
+        <text x="40" y="160" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" letter-spacing="2">② SSE · Server-Sent Events（伺服器推送事件）</text>
+        <line x1="80" y1="190" x2="80" y2="260" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="820" y1="190" x2="820" y2="260" stroke="#2a3450" stroke-dasharray="3 3"/>
+
+        <line x1="80" y1="200" x2="820" y2="200" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <text x="450" y="196" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">建立連線（單方向，client → server 開啟）</text>
+
+        <line x1="820" y1="220" x2="80" y2="220" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="235" x2="80" y2="235" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="250" x2="80" y2="250" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <text x="450" y="245" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">伺服器持續推送（單向：server → client）</text>
+
+        <!-- WebSocket -->
+        <text x="40" y="295" fill="#4ade80" font-family="JetBrains Mono" font-size="11" letter-spacing="2">③ WEBSOCKET · 全雙工通訊（業界標準）</text>
+        <line x1="80" y1="325" x2="80" y2="395" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="820" y1="325" x2="820" y2="395" stroke="#2a3450" stroke-dasharray="3 3"/>
+
+        <line x1="80" y1="335" x2="820" y2="335" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <text x="450" y="331" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">HTTP Upgrade → 升級為 WebSocket（一次握手）</text>
+
+        <line x1="80" y1="355" x2="820" y2="355" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <line x1="820" y1="370" x2="80" y2="370" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <line x1="80" y1="385" x2="820" y2="385" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <text x="450" y="395" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">雙向自由通訊（兩邊隨時都能發）</text>
+
+        <!-- WebRTC -->
+        <text x="40" y="430" fill="#c084fc" font-family="JetBrains Mono" font-size="11" letter-spacing="2">④ WEBRTC · 點對點傳輸（視訊通話）</text>
+        <line x1="80" y1="460" x2="80" y2="520" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="820" y1="460" x2="820" y2="520" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <text x="80" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">User A</text>
+        <text x="820" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">User B</text>
+
+        <line x1="80" y1="475" x2="820" y2="475" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="495" x2="80" y2="495" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
+        <line x1="80" y1="515" x2="820" y2="515" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
+        <text x="450" y="510" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">使用者直接連使用者，不經過伺服器（適合視訊、檔案）</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 詳細比較 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Comparison · 詳細比較</div>
+    <h2>四種技術的<em>選擇邏輯</em></h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">①</div>
+        <div class="step-content">
+          <h3>Long Polling · 長輪詢</h3>
+          <div class="step-sub">最早的方案，現在很少新專案用</div>
+          <p>
+            客戶端發請求，伺服器<strong>故意不立刻回</strong>，「掛著」直到有訊息才回應。
+            客戶端收到後馬上再發一個新請求。優點：相容性好（普通 HTTP 就行）；
+            缺點：每次訊息都要重新建立連線、效率低、伺服器要維護大量等待連線。
+          </p>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            適用場景：舊系統、必須繞過嚴格防火牆、無法升級的環境。新專案幾乎不選這個。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">②</div>
+        <div class="step-content">
+          <h3>SSE · Server-Sent Events</h3>
+          <div class="step-sub">單向推送，比 WebSocket 簡單</div>
+          <p>
+            建立一個<strong>持續開啟的 HTTP 連線</strong>，伺服器可以源源不斷推訊息給客戶端。
+            但這條連線只能單向（server → client），客戶端要送資料還是得用普通 HTTP。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 客戶端（瀏覽器原生支援）</span><br>
+<span class="key">const</span> es = <span class="key">new</span> EventSource(<span style="color:#fbbf24">'/api/stream'</span>);<br>
+es.onmessage = (e) =&gt; console.log(e.data);<br><br>
+<span class="comment"># 伺服器（每個 message 都是文字格式）</span><br>
+data: 新訊息 1<br>
+<br>
+data: 新訊息 2<br>
+          </div>
+          <div class="tech-callout">
+            <div class="ct-label">適合場景</div>
+            <ul>
+              <li><strong>新聞推播</strong>單向更新，不需要客戶端回話</li>
+              <li><strong>即時股價</strong>數值持續更新（你做 AlphaTrader 可以考慮）</li>
+              <li><strong>進度通知</strong>長時間任務的進度條</li>
+              <li><strong>AI 串流回應</strong>ChatGPT 那種逐字輸出</li>
+            </ul>
+          </div>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            SSE 用文字協定（明文），不像 WebSocket 是 binary frame。
+            自動重連、訊息 ID 標記都內建在標準裡，比 WebSocket 簡單得多。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">③</div>
+        <div class="step-content">
+          <h3>WebSocket · 全雙工通訊</h3>
+          <div class="step-sub">即時通訊的「標準答案」</div>
+          <p>
+            從 HTTP 升級而來，建立一條<strong>雙向永久通道</strong>，兩邊隨時都能發訊息。
+            是聊天、線上遊戲、協作編輯的主流選擇。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 客戶端</span><br>
+<span class="key">const</span> ws = <span class="key">new</span> WebSocket(<span style="color:#fbbf24">'wss://example.com/chat'</span>);<br>
+ws.onopen = () =&gt; ws.send(<span style="color:#fbbf24">'Hello'</span>);<br>
+ws.onmessage = (e) =&gt; console.log(e.data);<br><br>
+<span class="comment"># 伺服器（Node.js + ws 函式庫）</span><br>
+wss.on(<span style="color:#fbbf24">'connection'</span>, (ws) =&gt; {<br>
+&nbsp;&nbsp;ws.on(<span style="color:#fbbf24">'message'</span>, (msg) =&gt; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 廣播給所有人</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;wss.clients.forEach(c =&gt; c.send(msg));<br>
+&nbsp;&nbsp;});<br>
+});
+          </div>
+          <div class="tech-callout">
+            <div class="ct-label">適合場景</div>
+            <ul>
+              <li><strong>聊天室</strong>LINE、Slack、Discord</li>
+              <li><strong>多人線上遊戲</strong>需要極低延遲</li>
+              <li><strong>協作編輯</strong>Notion、Google Docs、Figma</li>
+              <li><strong>即時看板</strong>Trello 拖曳卡片即時同步</li>
+              <li><strong>金融交易</strong>下單、撤單、即時行情</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">④</div>
+        <div class="step-content">
+          <h3>WebRTC · 點對點直連</h3>
+          <div class="step-sub">視訊通話、檔案傳輸</div>
+          <p>
+            前面三種都是「客戶端 ↔ 伺服器」，<strong>WebRTC 是「客戶端 ↔ 客戶端」</strong>。
+            適合大量資料（影像、音訊）——如果走伺服器，伺服器頻寬會爆炸。
+          </p>
+          <p>
+            但 NAT、防火牆會擋直連。WebRTC 用 <strong>STUN / TURN 伺服器</strong>幫兩邊「打洞」建立連線。
+            連不通時 fallback 到 TURN 中繼。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">適合場景</div>
+            <ul>
+              <li><strong>視訊會議</strong>Google Meet、Zoom Web 版底層</li>
+              <li><strong>P2P 檔案分享</strong>WeTransfer 之類網頁版</li>
+              <li><strong>遠端桌面</strong>瀏覽器內遠端操作</li>
+              <li><strong>線上多人遊戲</strong>需要超低延遲又不想花太多伺服器費用</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <table class="compare-table" style="margin-top:32px;">
+      <thead>
+        <tr>
+          <th>技術</th>
+          <th>方向</th>
+          <th>連線數</th>
+          <th>典型用途</th>
+          <th>難度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Long Polling</strong></td>
+          <td>單向</td>
+          <td>每訊息 1 條</td>
+          <td>舊系統相容</td>
+          <td class="yes">低</td>
+        </tr>
+        <tr>
+          <td><strong>SSE</strong></td>
+          <td>單向（→ client）</td>
+          <td>1 條持久</td>
+          <td>新聞、股價、AI 串流</td>
+          <td class="yes">低</td>
+        </tr>
+        <tr>
+          <td><strong>WebSocket</strong></td>
+          <td>雙向</td>
+          <td>1 條持久</td>
+          <td>聊天、遊戲、協作</td>
+          <td>中</td>
+        </tr>
+        <tr>
+          <td><strong>WebRTC</strong></td>
+          <td>雙向（P2P）</td>
+          <td>不經伺服器</td>
+          <td>視訊、檔案</td>
+          <td class="no">高</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="q6-security.html" class="nav-card prev">
+        <div class="label">上一章 Q6</div>
+        <h4>網站攻擊面</h4>
+        <p>XSS、CSRF、SQL Injection</p>
+      </a>
+      <a href="q8-pwa.html" class="nav-card next">
+        <div class="label">下一章 Q8</div>
+        <h4>PWA 與離線</h4>
+        <p>Service Worker、Cache、IndexedDB</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">Web Atlas · Q7 · Real-time</div></footer>
+
+</body>
+</html>

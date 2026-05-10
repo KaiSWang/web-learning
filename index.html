@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Atlas — 網頁世界完整學習地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* 首頁特殊樣式 */
+  .toc-section {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .toc-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    gap: 32px;
+    padding: 28px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.3s;
+    align-items: center;
+  }
+
+  .toc-item:hover {
+    border-color: var(--accent);
+    background: var(--bg-3);
+    transform: translateX(4px);
+  }
+
+  .toc-num {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .toc-content h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .toc-content .toc-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .toc-content p {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  .toc-arrow {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-size: 24px;
+  }
+
+  .toc-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .toc-section-title:first-child { margin-top: 0; }
+
+  @media (max-width: 600px) {
+    .toc-item { grid-template-columns: 60px 1fr; }
+    .toc-arrow { display: none; }
+    .toc-num { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html" class="active">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>2026 / 完整版</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Complete Edition · 完整學習地圖
+    </div>
+    <h1>網頁世界，<br>從<em>一張地圖</em>開始</h1>
+    <p class="hero-sub">
+      這是一份為工程師寫的網頁學習指南。我們<strong style="color:var(--ink)">不從語法教起</strong>，
+      而是從你每天看到的東西出發——一次點擊、一次登入、一個畫面切換——把背後的所有技術一層一層剝開。
+      看完整套，你會擁有一張<strong style="color:var(--ink)">完整的網頁世界心智地圖</strong>，
+      之後不論深入哪個方向，都知道自己站在哪裡。
+    </p>
+  </div>
+</section>
+
+<section class="toc-section">
+  <div class="container">
+    <h2 style="font-size: 32px; margin-bottom: 8px;">完整目錄</h2>
+    <p style="color: var(--ink-2); margin-bottom: 32px;">14 個章節，建議從 Vol.1 開始順讀，但也可以隨時跳章。</p>
+
+    <div class="toc-section-title">Part I · 全貌與主線</div>
+
+    <div class="toc-grid">
+      <a href="vol1-overview.html" class="toc-item">
+        <div class="toc-num">01</div>
+        <div class="toc-content">
+          <div class="toc-sub">Vol. 01 · The Big Picture</div>
+          <h3>網頁設計的六大領域全貌</h3>
+          <p>從 UX、UI、HTML、CSS、JS 到部署——先看森林，再看樹木。每個領域是什麼、彼此如何銜接。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="vol2-journey.html" class="toc-item">
+        <div class="toc-num">02</div>
+        <div class="toc-content">
+          <div class="toc-sub">Vol. 02 · A Journey Through The Web</div>
+          <h3>從一次點擊看見整個系統</h3>
+          <p>追蹤「打開 Google → 維持登入 → 點擊跳轉」的完整鏈，三幕劇拆解 DNS / TCP / Cookie / SPA。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+    </div>
+
+    <div class="toc-section-title">Part II · 四條深入路徑（Options A–D）</div>
+
+    <div class="toc-grid">
+      <a href="opt-a-rendering.html" class="toc-item">
+        <div class="toc-num">A</div>
+        <div class="toc-content">
+          <div class="toc-sub">Option A · Browser Rendering</div>
+          <h3>瀏覽器拿到 HTML 後，怎麼變成畫面？</h3>
+          <p>DOM、CSSOM、Render Tree、Layout、Paint、Composite——一條完整的渲染管線。為什麼有些網頁會卡？</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="opt-b-oauth.html" class="toc-item">
+        <div class="toc-num">B</div>
+        <div class="toc-content">
+          <div class="toc-sub">Option B · OAuth Deep Dive</div>
+          <h3>「用 Google 登入」按鈕背後完整流程</h3>
+          <p>OAuth 2.0 四種流程、JWT、Refresh Token、PKCE。為什麼第三方登入比帳密更安全？</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="opt-c-backend.html" class="toc-item">
+        <div class="toc-num">C</div>
+        <div class="toc-content">
+          <div class="toc-sub">Option C · The Backend Side</div>
+          <h3>請求進入伺服器之後</h3>
+          <p>從伺服器視角看：Load Balancer、路由、控制器、ORM、資料庫、快取、訊息佇列。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="opt-d-fullstack.html" class="toc-item">
+        <div class="toc-num">D</div>
+        <div class="toc-content">
+          <div class="toc-sub">Option D · Full Stack Map</div>
+          <h3>前端、後端、資料庫怎麼分工合作</h3>
+          <p>一個完整 Web App 的所有角色，從你打字到資料寫入硬碟，全鏈路一次看完。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+    </div>
+
+    <div class="toc-section-title">Part III · 八個進階主題（Q&A 拆解）</div>
+
+    <div class="toc-grid">
+      <a href="q1-rendering-pipeline.html" class="toc-item">
+        <div class="toc-num">Q1</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 01 · Rendering Pipeline</div>
+          <h3>網頁怎麼從程式碼變成畫面？</h3>
+          <p>瀏覽器引擎內部的渲染管線完整拆解，60fps 的祕密。（與 Option A 互補）</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q2-cdn.html" class="toc-item">
+        <div class="toc-num">Q2</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 02 · CDN & Edge</div>
+          <h3>為什麼有的網站跨國還很快？</h3>
+          <p>CDN 邊緣節點、快取策略、Cloudflare Workers、邊緣運算——你熟悉的 sino-suisse 遷移知識延伸。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q3-auth.html" class="toc-item">
+        <div class="toc-num">Q3</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 03 · Authentication</div>
+          <h3>登入按鈕點下去，後端發生什麼？</h3>
+          <p>密碼 hash + salt、Session vs JWT、2FA、Passkey 無密碼登入。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q4-personalization.html" class="toc-item">
+        <div class="toc-num">Q4</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 04 · Personalization</div>
+          <h3>同一個網址，為什麼人人看到不同內容？</h3>
+          <p>個人化推薦的前後端分工、資料庫索引、A/B Test、推薦演算法基礎。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q5-performance.html" class="toc-item">
+        <div class="toc-num">Q5</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 05 · Performance</div>
+          <h3>為什麼有些網站打開超慢？</h3>
+          <p>Critical Rendering Path、TTFB、LCP、CLS、INP—Core Web Vitals 與診斷工具。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q6-security.html" class="toc-item">
+        <div class="toc-num">Q6</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 06 · Security</div>
+          <h3>網站被攻擊會發生什麼？</h3>
+          <p>XSS、CSRF、SQL Injection、DDoS、Supply Chain Attack——五大攻擊面與防禦。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q7-realtime.html" class="toc-item">
+        <div class="toc-num">Q7</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 07 · Real-time</div>
+          <h3>WebSocket 跟 HTTP 差在哪？</h3>
+          <p>長輪詢、SSE、WebSocket、WebRTC——四種「即時」技術的選擇。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+
+      <a href="q8-pwa.html" class="toc-item">
+        <div class="toc-num">Q8</div>
+        <div class="toc-content">
+          <div class="toc-sub">Q · 08 · PWA & Offline</div>
+          <h3>離線也能用的網站怎麼做到的？</h3>
+          <p>Service Worker、Cache API、IndexedDB——PWA 的三大支柱。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+    </div>
+
+    <div class="toc-section-title">附錄</div>
+
+    <div class="toc-grid">
+      <a href="glossary.html" class="toc-item">
+        <div class="toc-num">∗</div>
+        <div class="toc-content">
+          <div class="toc-sub">Appendix · Glossary</div>
+          <h3>縮寫術語對照表</h3>
+          <p>所有章節中出現的縮寫（HTTP、SPA、SEO、JWT、OAuth、CSP…）一次查清楚。</p>
+        </div>
+        <div class="toc-arrow">▸</div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Web Atlas · Complete Edition · 為工程師而寫
+  </div>
+</footer>
+
+</body>
+</html>

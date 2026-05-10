@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option C — 後端視角：請求進入伺服器之後</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Option C</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Option C · The Backend Side
+    </div>
+    <h1>請求進入伺服器後，<br>到底<em>經過了哪些手</em>？</h1>
+    <p class="hero-sub">
+      Vol.02 第一幕我們追到「請求送到 Google 伺服器」就停了。但「伺服器」其實不是一台機器——
+      它是一整套分工合作的系統。請求會經過<strong style="color:var(--ink)">負載均衡、反向代理、應用伺服器、資料庫、快取、訊息佇列</strong>等各種角色，
+      最後才能組出回應。這一章我們從後端視角看完整鏈路。
+    </p>
+  </div>
+</section>
+
+<!-- 後端架構總覽 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Architecture · 後端架構全景</div>
+    <h2>一個請求進來，<br><em>多少個角色</em>會接力處理？</h2>
+    <p class="lead">
+      下面這張圖是現代後端的典型架構。從外部進來的請求，會被多層處理後才到達真正寫業務邏輯的程式碼。
+      每一層都有特定職責。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 後端服務分層架構</div>
+      <svg viewBox="0 0 900 640" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="bkAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <!-- 使用者 -->
+        <rect x="370" y="20" width="160" height="50" fill="#0a0e1a" stroke="#60a5fa" rx="4"/>
+        <text x="450" y="42" fill="#60a5fa" font-family="JetBrains Mono" font-size="11" text-anchor="middle">CLIENT</text>
+        <text x="450" y="60" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">瀏覽器 / App</text>
+
+        <line x1="450" y1="70" x2="450" y2="100" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+
+        <!-- CDN -->
+        <rect x="370" y="110" width="160" height="50" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="450" y="130" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">EDGE LAYER</text>
+        <text x="450" y="148" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">CDN（如 Cloudflare）</text>
+
+        <line x1="450" y1="160" x2="450" y2="190" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+
+        <!-- Load Balancer -->
+        <rect x="370" y="200" width="160" height="50" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="450" y="220" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">LOAD BALANCER</text>
+        <text x="450" y="238" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">負載均衡（Nginx / ELB）</text>
+
+        <!-- Three App Servers -->
+        <line x1="450" y1="250" x2="170" y2="290" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#bkAr)"/>
+        <line x1="450" y1="250" x2="450" y2="290" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+        <line x1="450" y1="250" x2="730" y2="290" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#bkAr)"/>
+
+        <rect x="80" y="300" width="180" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="170" y="320" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">APP SERVER #1</text>
+        <text x="170" y="340" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">Node.js / Python</text>
+        <text x="170" y="355" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">執行業務邏輯</text>
+
+        <rect x="360" y="300" width="180" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="450" y="320" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">APP SERVER #2</text>
+        <text x="450" y="340" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">Go / Java</text>
+        <text x="450" y="355" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">執行業務邏輯</text>
+
+        <rect x="640" y="300" width="180" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="730" y="320" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">APP SERVER #3</text>
+        <text x="730" y="340" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">同上</text>
+        <text x="730" y="355" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">水平擴展</text>
+
+        <!-- Cache layer -->
+        <line x1="170" y1="360" x2="170" y2="395" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+        <line x1="450" y1="360" x2="450" y2="395" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+        <line x1="730" y1="360" x2="730" y2="395" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bkAr)"/>
+
+        <!-- Cache -->
+        <rect x="80" y="400" width="180" height="60" fill="#1a2238" stroke="#c084fc" rx="4"/>
+        <text x="170" y="420" fill="#c084fc" font-family="JetBrains Mono" font-size="10" text-anchor="middle">CACHE</text>
+        <text x="170" y="440" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">Redis / Memcached</text>
+        <text x="170" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">記憶體快取</text>
+
+        <!-- DB -->
+        <rect x="360" y="400" width="180" height="60" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="450" y="420" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">DATABASE</text>
+        <text x="450" y="440" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">PostgreSQL / MySQL</text>
+        <text x="450" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">持久化資料</text>
+
+        <!-- Queue -->
+        <rect x="640" y="400" width="180" height="60" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="730" y="420" fill="#60a5fa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">MESSAGE QUEUE</text>
+        <text x="730" y="440" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">RabbitMQ / Kafka</text>
+        <text x="730" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">非同步任務</text>
+
+        <!-- Workers -->
+        <line x1="730" y1="460" x2="730" y2="495" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#bkAr)"/>
+
+        <rect x="640" y="500" width="180" height="60" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="730" y="520" fill="#60a5fa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">WORKERS</text>
+        <text x="730" y="540" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">背景處理器</text>
+        <text x="730" y="555" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">寄信、生成報表</text>
+
+        <!-- 外部服務 -->
+        <rect x="80" y="500" width="180" height="60" fill="#0a0e1a" stroke="#2a3450" stroke-dasharray="3 3" rx="4"/>
+        <text x="170" y="520" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">EXTERNAL APIs</text>
+        <text x="170" y="540" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">第三方服務</text>
+        <text x="170" y="555" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">支付、地圖、AI</text>
+
+        <line x1="170" y1="460" x2="170" y2="495" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#bkAr)"/>
+
+        <!-- 標籤 -->
+        <text x="450" y="600" fill="#6b7590" font-family="JetBrains Mono" font-size="11" text-anchor="middle">每一層都可以獨立擴展、獨立部署、獨立故障</text>
+        <text x="450" y="620" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">這就是「分散式系統」的基本樣貌</text>
+      </svg>
+      <p class="diagram-caption">每個方框都可能由多台機器組成。Google 這種規模的服務每層都是上千台。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 逐層解析 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Layer by Layer · 逐層拆解</div>
+    <h2>每一層都<em>解決什麼問題</em>？</h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">1</div>
+        <div class="step-content">
+          <h3>Load Balancer · 負載均衡器</h3>
+          <div class="step-sub">分流的交通警察</div>
+          <p>
+            一個服務如果只有一台伺服器，那台壞了整個網站就掛了。所以實際部署時會有<strong>多台一模一樣的應用伺服器</strong>，
+            前面放一個 Load Balancer 把流量平均分給它們。這也讓系統能<strong>水平擴展</strong>——流量大時多開幾台就好。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">分流策略</div>
+            <ul>
+              <li><strong>Round Robin</strong>輪流分配，最簡單</li>
+              <li><strong>Least Connections</strong>分給目前連線數最少的</li>
+              <li><strong>IP Hash</strong>同一個使用者每次都打到同一台（保持狀態用）</li>
+              <li><strong>Health Check</strong>定期檢查每台是否健康，壞掉的自動踢掉</li>
+            </ul>
+          </div>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            常見的 Load Balancer：Nginx、HAProxy（自己架）、AWS ELB、Cloudflare Load Balancer（雲端託管）。
+            你之前 sino-suisse 用過的 ELB 就是 AWS 的負載均衡器。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2</div>
+        <div class="step-content">
+          <h3>Reverse Proxy · 反向代理</h3>
+          <div class="step-sub">應用前的守門員</div>
+          <p>
+            通常和 Load Balancer 是同一台機器（Nginx 同時做這兩件事）。它做的事包括：
+            <strong>SSL 終止</strong>（HTTPS 在這裡解密，後面內部都走 HTTP）、
+            <strong>靜態檔案直接回</strong>（圖片、CSS 不用麻煩應用伺服器）、
+            <strong>請求改寫</strong>、<strong>Rate Limiting</strong>（防止 DDoS）。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3</div>
+        <div class="step-content">
+          <h3>Application Server · 應用伺服器</h3>
+          <div class="step-sub">真正執行業務邏輯的地方</div>
+          <p>
+            這是後端工程師寫程式的地方——Node.js、Python、Go、Java、Ruby 等都是常見選擇。
+            收到請求後，這層會：解析請求 → 驗證身份 → 路由到對應的 Controller → 執行業務邏輯 → 組裝回應。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 一個簡化的請求處理流程（以 Express.js 為例）</span><br>
+app.<span class="key">get</span>(<span style="color:#fbbf24">'/users/:id'</span>, <span class="key">async</span> (req, res) =&gt; {<br>
+&nbsp;&nbsp;<span class="comment">// 1. 驗證 JWT</span><br>
+&nbsp;&nbsp;<span class="key">const</span> user = <span class="key">await</span> verifyToken(req.headers.authorization);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="comment">// 2. 查快取</span><br>
+&nbsp;&nbsp;<span class="key">const</span> cached = <span class="key">await</span> redis.get(<span style="color:#fbbf24">`user:${req.params.id}`</span>);<br>
+&nbsp;&nbsp;<span class="key">if</span> (cached) <span class="key">return</span> res.json(JSON.parse(cached));<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="comment">// 3. 查資料庫</span><br>
+&nbsp;&nbsp;<span class="key">const</span> data = <span class="key">await</span> db.users.findById(req.params.id);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="comment">// 4. 寫入快取</span><br>
+&nbsp;&nbsp;<span class="key">await</span> redis.setex(<span style="color:#fbbf24">`user:${req.params.id}`</span>, 60, JSON.stringify(data));<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<span class="comment">// 5. 回傳</span><br>
+&nbsp;&nbsp;res.json(data);<br>
+});
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">4</div>
+        <div class="step-content">
+          <h3>Cache · 快取層</h3>
+          <div class="step-sub">記憶體存的「常見答案」</div>
+          <p>
+            資料庫查詢很慢（毫秒等級），記憶體快取很快（微秒等級）。把<strong>常被問到的資料</strong>放在記憶體裡，
+            可以讓系統承受 10 倍以上的流量。
+            最常用的快取是 <strong>Redis</strong>（功能多、可持久化）和 <strong>Memcached</strong>（純粹快、簡單）。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">快取的常見模式</div>
+            <ul>
+              <li><strong>Cache-Aside</strong>應用自己管，沒命中就查資料庫並寫入快取（最常見）</li>
+              <li><strong>Read-Through</strong>快取自己負責同步，應用永遠查快取</li>
+              <li><strong>Write-Through</strong>寫入時同時寫快取和資料庫</li>
+              <li><strong>Write-Behind</strong>先寫快取，背景慢慢同步到資料庫</li>
+              <li><strong>TTL</strong>每筆快取設過期時間，避免永遠陳舊</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">5</div>
+        <div class="step-content">
+          <h3>Database · 資料庫</h3>
+          <div class="step-sub">事實的最終來源</div>
+          <p>
+            資料的「家」。分兩大類：<strong>SQL（關聯式）</strong>和 <strong>NoSQL（非關聯式）</strong>。
+          </p>
+          <table class="compare-table" style="margin-top:16px;">
+            <thead>
+              <tr>
+                <th>類型</th>
+                <th>代表</th>
+                <th>特性</th>
+                <th>適合場景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>關聯式 SQL</strong></td>
+                <td>PostgreSQL, MySQL</td>
+                <td>嚴格 schema、強一致性、JOIN</td>
+                <td>需要交易的系統（金融、訂單）</td>
+              </tr>
+              <tr>
+                <td><strong>文件型 NoSQL</strong></td>
+                <td>MongoDB</td>
+                <td>JSON 結構、彈性 schema</td>
+                <td>內容管理、Log 分析</td>
+              </tr>
+              <tr>
+                <td><strong>鍵值型 NoSQL</strong></td>
+                <td>Redis, DynamoDB</td>
+                <td>極快、純 key-value</td>
+                <td>快取、Session、計數器</td>
+              </tr>
+              <tr>
+                <td><strong>欄位型</strong></td>
+                <td>Cassandra, BigQuery</td>
+                <td>大量寫入、分析查詢</td>
+                <td>資料倉儲、IoT 數據</td>
+              </tr>
+              <tr>
+                <td><strong>圖形型</strong></td>
+                <td>Neo4j</td>
+                <td>處理關聯</td>
+                <td>社群網路、推薦系統</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">6</div>
+        <div class="step-content">
+          <h3>ORM · 物件關聯映射</h3>
+          <div class="step-sub">資料庫的翻譯官</div>
+          <p>
+            <span class="acronym">ORM<span class="full">Object-Relational Mapping</span></span>
+            讓你不用寫 SQL，用程式語言的物件操作就能讀寫資料庫。
+            它在背後幫你產生 SQL、處理連線池、做型別轉換。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 沒有 ORM（直接寫 SQL）</span><br>
+db.query(<span style="color:#fbbf24">"SELECT * FROM users WHERE id = ?"</span>, [123]);<br><br>
+<span class="comment"># 有 ORM（更直觀）</span><br>
+User.<span class="key">findOne</span>({ id: 123 });
+          </div>
+          <div class="tech-callout">
+            <div class="ct-label">主流 ORM</div>
+            <ul>
+              <li><strong>Prisma</strong>現代 TypeScript ORM，型別安全</li>
+              <li><strong>SQLAlchemy</strong>Python 主流 ORM</li>
+              <li><strong>GORM</strong>Go 主流 ORM</li>
+              <li><strong>Hibernate</strong>Java 老牌 ORM</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">7</div>
+        <div class="step-content">
+          <h3>Message Queue · 訊息佇列</h3>
+          <div class="step-sub">非同步任務的傳送帶</div>
+          <p>
+            有些任務很慢（寄信要幾秒、產生報表要幾分鐘），不能讓使用者乾等。
+            這時應用伺服器只要把任務「丟到佇列」，就馬上回應使用者「已收到」，
+            背景的 <strong>Worker</strong> 慢慢從佇列裡拿任務來執行。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 同步做法：使用者要等 5 秒</span><br>
+[使用者點「下單」] <span class="arrow-line">─▸</span> 處理訂單 <span class="arrow-line">─▸</span> <span class="warn">寄確認信(5秒)</span> <span class="arrow-line">─▸</span> 回應<br><br>
+<span class="comment"># 非同步做法：使用者立刻拿到回應</span><br>
+[使用者點「下單」] <span class="arrow-line">─▸</span> 處理訂單 <span class="arrow-line">─▸</span> <span class="key">丟訊息進 Queue</span> <span class="arrow-line">─▸</span> 立即回應<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Worker <span class="arrow-line">─▸</span> 寄信<span class="comment">（背景處理）</span>
+          </div>
+          <div class="tech-callout">
+            <div class="ct-label">主流訊息佇列</div>
+            <ul>
+              <li><strong>RabbitMQ</strong>傳統訊息佇列，支援多種模式</li>
+              <li><strong>Apache Kafka</strong>高吞吐量、串流處理</li>
+              <li><strong>AWS SQS</strong>雲端託管</li>
+              <li><strong>Redis Streams</strong>輕量級選擇</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 一個請求的生命週期 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Lifecycle · 一個請求的完整生命週期</div>
+    <h2>從 HTTP 進來到回應出去，<br>實際<em>跑了哪些路</em>？</h2>
+    <p class="lead">
+      以「使用者查看自己的訂單列表」為例，看一個請求在後端走的完整路徑。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 「查訂單列表」請求生命週期時序</div>
+      <svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="lifAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <!-- 角色 -->
+        <rect x="20" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="80" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Client</text>
+
+        <rect x="170" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="230" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">LB / Proxy</text>
+
+        <rect x="320" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="380" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">App Server</text>
+
+        <rect x="470" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="530" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Cache</text>
+
+        <rect x="620" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="680" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Database</text>
+
+        <rect x="770" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="830" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Queue</text>
+
+        <!-- 生命線 -->
+        <line x1="80" y1="60" x2="80" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="230" y1="60" x2="230" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="380" y1="60" x2="380" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="530" y1="60" x2="530" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="680" y1="60" x2="680" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <line x1="830" y1="60" x2="830" y2="530" stroke="#2a3450" stroke-dasharray="3 3"/>
+
+        <!-- Step 1 -->
+        <line x1="80" y1="90" x2="230" y2="90" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#lifAr)"/>
+        <text x="155" y="85" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">① GET /api/orders</text>
+
+        <!-- Step 2 -->
+        <line x1="230" y1="120" x2="380" y2="120" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#lifAr)"/>
+        <text x="305" y="115" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">② 路由到 App #2</text>
+
+        <!-- Step 3 -->
+        <rect x="340" y="135" width="80" height="30" fill="#0a0e1a" stroke="#fbbf24" rx="2"/>
+        <text x="380" y="155" fill="#fbbf24" font-family="JetBrains Mono" font-size="9" text-anchor="middle">③ 驗證 JWT</text>
+
+        <!-- Step 4 -->
+        <line x1="380" y1="185" x2="530" y2="185" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#lifAr)"/>
+        <text x="455" y="180" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">④ 查快取 orders:user_123</text>
+
+        <line x1="530" y1="215" x2="380" y2="215" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lifAr)"/>
+        <text x="455" y="210" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑤ Cache miss</text>
+
+        <!-- Step 5 -->
+        <line x1="380" y1="245" x2="680" y2="245" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#lifAr)"/>
+        <text x="530" y="240" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑥ SELECT * FROM orders WHERE user_id=123</text>
+
+        <line x1="680" y1="275" x2="380" y2="275" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lifAr)"/>
+        <text x="530" y="270" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑦ 回傳 50 筆訂單</text>
+
+        <!-- Step 6 -->
+        <line x1="380" y1="305" x2="530" y2="305" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#lifAr)"/>
+        <text x="455" y="300" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑧ 寫入快取（TTL 60s）</text>
+
+        <!-- Step 7 -->
+        <line x1="380" y1="335" x2="830" y2="335" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lifAr)"/>
+        <text x="600" y="330" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑨ 丟一個事件「user_123 查看訂單」（非同步分析用）</text>
+
+        <!-- Step 8 -->
+        <rect x="340" y="350" width="80" height="30" fill="#0a0e1a" stroke="#4ade80" rx="2"/>
+        <text x="380" y="370" fill="#4ade80" font-family="JetBrains Mono" font-size="9" text-anchor="middle">⑩ 組裝 JSON</text>
+
+        <!-- Step 9 -->
+        <line x1="380" y1="400" x2="230" y2="400" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lifAr)"/>
+        <text x="305" y="395" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑪ HTTP 200 + JSON</text>
+
+        <!-- Step 10 -->
+        <line x1="230" y1="430" x2="80" y2="430" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#lifAr)"/>
+        <text x="155" y="425" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑫ 回到瀏覽器</text>
+
+        <!-- 時間標記 -->
+        <text x="50" y="475" fill="#6b7590" font-family="JetBrains Mono" font-size="10">總耗時：~ 80ms</text>
+        <text x="50" y="495" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9">第二次查同一筆：~ 5ms（快取命中）</text>
+        <text x="50" y="515" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9">差距 16 倍——這就是快取的威力</text>
+      </svg>
+      <p class="diagram-caption">Cache miss 走完整路徑；Cache hit 只到 Cache 就返回</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="opt-b-oauth.html" class="nav-card prev">
+        <div class="label">上一章 Option B</div>
+        <h4>OAuth 完整拆解</h4>
+        <p>用 Google 登入背後的流程</p>
+      </a>
+      <a href="opt-d-fullstack.html" class="nav-card next">
+        <div class="label">下一章 Option D</div>
+        <h4>全端架構地圖</h4>
+        <p>前後端與資料庫如何分工</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Web Atlas · Option C · The Backend Side
+  </div>
+</footer>
+
+</body>
+</html>

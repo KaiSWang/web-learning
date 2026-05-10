@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option B — OAuth 完整拆解</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Option B</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Option B · OAuth 2.0 Deep Dive
+    </div>
+    <h1>「用 Google 登入」<br>按鈕背後的<em>完整流程</em></h1>
+    <p class="hero-sub">
+      你在很多網站看過「使用 Google 帳號登入」「使用 Facebook 登入」按鈕。點下去之後，你的密碼從來沒給過那個網站，
+      但它居然成功讓你登入了——這個「<strong style="color:var(--ink)">不用給密碼也能授權</strong>」的魔法，就是 OAuth 2.0。
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-tag">The Problem · 為什麼需要 OAuth</div>
+    <h2>沒有 OAuth 之前，<br>世界長什麼<em>糟糕的樣子</em>？</h2>
+    <p class="lead">
+      想像 2010 年，有個第三方網站想幫你管理 Gmail 信件。
+      它會跟你要 Google 帳號和密碼，存在自己的資料庫裡，每次幫你查信時用你的密碼登入 Gmail——
+      這有<strong>三個致命問題</strong>。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 沒有 OAuth 的世界</div>
+      <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="bAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <rect x="40" y="100" width="160" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="120" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">你</text>
+        <text x="120" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">想用第三方服務</text>
+        <text x="120" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">管理你的 Gmail</text>
+
+        <rect x="320" y="100" width="160" height="80" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="400" y="125" fill="#ff6b4a" font-family="Fraunces" font-size="13" text-anchor="middle">第三方網站</text>
+        <text x="400" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">存你的密碼</text>
+        <text x="400" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">假裝是你登入</text>
+
+        <rect x="600" y="100" width="160" height="80" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="680" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Google</text>
+        <text x="680" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">無法分辨</text>
+        <text x="680" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">是你還是它</text>
+
+        <line x1="200" y1="140" x2="318" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bAr)"/>
+        <text x="259" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">給帳號密碼</text>
+
+        <line x1="480" y1="140" x2="598" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bAr)"/>
+        <text x="539" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">用你的密碼</text>
+
+        <text x="400" y="225" fill="#ff6b4a" font-family="JetBrains Mono" font-size="12" text-anchor="middle">⚠ 三大問題：</text>
+        <text x="400" y="245" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">① 第三方拿到你的真實密碼</text>
+        <text x="400" y="262" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">② 第三方擁有所有權限（包括刪除帳號）</text>
+        <text x="400" y="279" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">③ 你想撤銷只能改密碼（連自己都得重登）</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- OAuth 流程 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">The Solution · OAuth 2.0 流程</div>
+    <h2>OAuth 怎麼解決<br>這些<em>問題</em>？</h2>
+    <p class="lead">
+      核心想法：<strong>第三方永遠不接觸你的密碼</strong>，而是去 Google 拿一張「授權票券」（Token），
+      憑票券去做有限的事情，票券可以隨時撤銷。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ OAuth 2.0 授權碼流程（Authorization Code Flow）</div>
+      <svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="oAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+          <marker id="oArOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <!-- 角色 -->
+        <rect x="40" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="120" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">你 (User)</text>
+
+        <rect x="240" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="320" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">第三方 App</text>
+
+        <rect x="440" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="520" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">Google 登入頁</text>
+
+        <rect x="640" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="720" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">Google API</text>
+
+        <!-- 生命線 -->
+        <line x1="120" y1="60" x2="120" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="320" y1="60" x2="320" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="520" y1="60" x2="520" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="720" y1="60" x2="720" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- Step 1 -->
+        <line x1="120" y1="90" x2="320" y2="90" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="220" y="85" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">① 點擊「用 Google 登入」</text>
+
+        <!-- Step 2 -->
+        <line x1="320" y1="120" x2="120" y2="120" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="220" y="115" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">② 重新導向到 Google</text>
+
+        <!-- Step 3 -->
+        <line x1="120" y1="150" x2="520" y2="150" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="320" y="145" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">③ 跳到 Google 登入頁（含 client_id, scope, redirect_uri）</text>
+
+        <!-- Step 4 -->
+        <line x1="520" y1="180" x2="120" y2="180" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="320" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">④ 顯示登入畫面 + 「該 App 想存取你的 OOO」確認頁</text>
+
+        <!-- Step 5 -->
+        <line x1="120" y1="210" x2="520" y2="210" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="320" y="205" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑤ 你登入 + 點擊「同意授權」</text>
+
+        <!-- Step 6 -->
+        <rect x="450" y="225" width="140" height="40" fill="#0a0e1a" stroke="#fbbf24" rx="4"/>
+        <text x="520" y="248" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Google 產生</text>
+        <text x="520" y="262" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Authorization Code</text>
+
+        <!-- Step 7 -->
+        <line x1="520" y1="290" x2="120" y2="290" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="320" y="285" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑥ 重新導向回 App，網址帶 ?code=AUTH_CODE</text>
+
+        <!-- Step 8 -->
+        <line x1="120" y1="320" x2="320" y2="320" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="220" y="315" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑦ 瀏覽器把 code 交給 App</text>
+
+        <!-- Step 9 -->
+        <line x1="320" y1="350" x2="720" y2="350" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="345" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑧ 後端用 code + client_secret 換 Access Token</text>
+
+        <!-- Step 10 -->
+        <line x1="720" y1="380" x2="320" y2="380" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="375" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑨ 回傳 Access Token + Refresh Token</text>
+
+        <!-- 標記重點區段 -->
+        <rect x="240" y="395" width="560" height="2" fill="#fbbf24"/>
+        <text x="520" y="415" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="2">— 以上為授權階段，以下為使用階段 —</text>
+        <rect x="240" y="430" width="560" height="2" fill="#fbbf24"/>
+
+        <!-- Step 11 -->
+        <line x1="320" y1="460" x2="720" y2="460" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="455" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑩ 帶 Access Token 呼叫 API（例如：拿 Email 列表）</text>
+
+        <!-- Step 12 -->
+        <line x1="720" y1="490" x2="320" y2="490" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="485" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑪ 回傳資料</text>
+
+        <!-- Step 13 -->
+        <line x1="320" y1="520" x2="120" y2="520" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="220" y="515" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑫ App 顯示資料給你</text>
+
+        <!-- Token 過期 -->
+        <rect x="240" y="555" width="560" height="2" fill="#fbbf24" stroke-dasharray="2 2"/>
+        <text x="520" y="575" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="2">— Access Token 過期後 —</text>
+        <rect x="240" y="585" width="560" height="2" fill="#fbbf24" stroke-dasharray="2 2"/>
+
+        <!-- Step 14 -->
+        <line x1="320" y1="615" x2="720" y2="615" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="610" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑬ 用 Refresh Token 換新的 Access Token（不需要你重登）</text>
+
+        <line x1="720" y1="645" x2="320" y2="645" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="640" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑭ 新的 Access Token</text>
+
+        <text x="450" y="680" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">綠色 = 使用者參與　/　橘色 = 後端對後端通訊</text>
+      </svg>
+      <p class="diagram-caption">完整 14 個步驟。看似複雜，但每一步都在解決一個安全問題。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 關鍵術語解釋 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Key Concepts · 關鍵概念</div>
+    <h2>OAuth 流程中的<em>四個主角</em></h2>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">A</div>
+        <div class="step-content">
+          <h3>Authorization Code · 授權碼</h3>
+          <div class="step-sub">短命的「臨時通行證」</div>
+          <p>
+            Google 在使用者同意授權後，產生一個短暫有效的 Code（通常 10 分鐘）。
+            這個 Code 會透過<strong>瀏覽器網址</strong>傳給第三方 App。
+          </p>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            為什麼不直接給 Access Token？因為網址容易被偷看（瀏覽器歷史、伺服器日誌）。
+            授權碼即使被偷，沒有 client_secret 也換不到 Token。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">B</div>
+        <div class="step-content">
+          <h3>Access Token · 存取權杖</h3>
+          <div class="step-sub">真正的「鑰匙」</div>
+          <p>
+            憑這個 Token 才能呼叫 Google 的 API（拿 Email、行事曆、雲端硬碟資料）。
+            通常<strong>1 小時過期</strong>，過期後要用 Refresh Token 換新的。
+          </p>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            為什麼設這麼短？因為一旦洩漏，攻擊者只能用 1 小時，傷害有限。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">C</div>
+        <div class="step-content">
+          <h3>Refresh Token · 刷新權杖</h3>
+          <div class="step-sub">「續約」用的長期憑證</div>
+          <p>
+            這個 Token 通常<strong>數週或永久有效</strong>，但只能用來換新的 Access Token，不能直接呼叫 API。
+            存放在後端伺服器（不放前端）。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">D</div>
+        <div class="step-content">
+          <h3>Scope · 權限範圍</h3>
+          <div class="step-sub">細粒度授權</div>
+          <p>
+            App 一開始要求授權時，必須宣告自己想存取什麼。例如：
+            <code>scope=email profile</code>（只要基本資料）vs <code>scope=gmail.readonly</code>（只能讀信，不能寫信）。
+            使用者授權時看得到這份清單，可以選擇拒絕。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">常見 Scope 範例</div>
+            <ul>
+              <li><strong>openid</strong>OpenID Connect 標準的基本識別</li>
+              <li><strong>email</strong>取得 email 地址</li>
+              <li><strong>profile</strong>取得姓名、頭像</li>
+              <li><strong>gmail.readonly</strong>只能讀 Gmail 信件</li>
+              <li><strong>drive.file</strong>只能存取 App 自己建立的檔案</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- JWT vs Session -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Bonus · JWT 是什麼</div>
+    <h2>JWT vs Session：<br>兩種<em>身份管理</em>方式</h2>
+    <p class="lead">
+      OAuth 常與 <strong>JWT</strong>（JSON Web Token）一起出現。它是一種特殊的 Token 格式——
+      跟傳統 Session 比起來有重要的架構差異。
+    </p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>面向</th>
+          <th>Session（傳統）</th>
+          <th>JWT（現代）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>狀態存哪</strong></td>
+          <td>伺服器資料庫（記錄誰有效）</td>
+          <td>Token 本身（自包含資訊）</td>
+        </tr>
+        <tr>
+          <td><strong>每次驗證</strong></td>
+          <td>查資料庫</td>
+          <td>驗簽章（CPU 運算）</td>
+        </tr>
+        <tr>
+          <td><strong>分散式擴展</strong></td>
+          <td class="no">難，Session 要共享</td>
+          <td class="yes">易，無狀態</td>
+        </tr>
+        <tr>
+          <td><strong>強制登出</strong></td>
+          <td class="yes">直接刪 Session</td>
+          <td class="no">難，要等過期或維護黑名單</td>
+        </tr>
+        <tr>
+          <td><strong>Token 大小</strong></td>
+          <td>小（只是 ID）</td>
+          <td>大（含資訊）</td>
+        </tr>
+        <tr>
+          <td><strong>適合場景</strong></td>
+          <td>單一網站、傳統 Web App</td>
+          <td>微服務、跨服務、行動 App</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flow-illustration">
+<span class="comment"># JWT 長這樣（用 . 分三段）</span><br>
+<span class="key">eyJhbGciOiJIUzI1NiIs...</span> <span class="comment"># Header（演算法資訊）</span><br>
+.<br>
+<span class="key">eyJzdWIiOiIxMjM0...</span> <span class="comment"># Payload（使用者資訊）</span><br>
+.<br>
+<span class="warn">SflKxwRJSMeKKF2QT4...</span> <span class="comment"># Signature（簽章驗證）</span><br><br>
+<span class="comment"># 解碼後的 Payload 範例</span><br>
+{<br>
+&nbsp;&nbsp;<span class="key">"sub"</span>: "user_123",<br>
+&nbsp;&nbsp;<span class="key">"name"</span>: "KS",<br>
+&nbsp;&nbsp;<span class="key">"exp"</span>: 1730000000  <span class="comment"># 過期時間</span><br>
+}
+    </div>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="opt-a-rendering.html" class="nav-card prev">
+        <div class="label">上一章 Option A</div>
+        <h4>瀏覽器渲染管線</h4>
+        <p>HTML 怎麼變成畫面</p>
+      </a>
+      <a href="opt-c-backend.html" class="nav-card next">
+        <div class="label">下一章 Option C</div>
+        <h4>後端視角</h4>
+        <p>請求進入伺服器之後</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Web Atlas · Option B · OAuth Deep Dive
+  </div>
+</footer>
+
+</body>
+</html>

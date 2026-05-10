@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q2 — CDN 與邊緣運算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Q · 02</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Q · 02 · CDN & Edge Computing
+    </div>
+    <h1>跨國網站<br>為什麼還能<em>這麼快</em>？</h1>
+    <p class="hero-sub">
+      你在台北打開美國的新聞網站，幾乎沒延遲。但物理上資料要走過太平洋海底電纜——光速也要 100ms。
+      網站怎麼克服這個距離？答案是 <strong style="color:var(--ink)">CDN（Content Delivery Network）</strong>，
+      它把內容「複製」到世界各地，讓你不用真的連到美國。你之前處理 sino-suisse.com 的 Cloudflare 遷移，就是在玩這個系統。
+    </p>
+  </div>
+</section>
+
+<!-- CDN 架構 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Architecture · CDN 全球架構</div>
+    <h2>CDN 怎麼把內容<br><em>放到你身邊</em>？</h2>
+    <p class="lead">
+      傳統做法：所有使用者都連到原始伺服器（origin server），距離越遠越慢。
+      CDN 做法：在<strong>全球幾百個城市建邊緣節點</strong>（PoP, Point of Presence），原始內容快取在最近的節點。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 沒 CDN vs 有 CDN</div>
+      <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="cdnAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+          <marker id="cdnAr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+        </defs>
+
+        <!-- 沒 CDN -->
+        <text x="225" y="30" fill="#ff6b4a" font-family="JetBrains Mono" font-size="12" text-anchor="middle" letter-spacing="2">沒有 CDN</text>
+
+        <!-- 使用者群 -->
+        <rect x="20" y="60" width="100" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="70" y="80" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">台灣</text>
+        <text x="70" y="98" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">使用者</text>
+
+        <rect x="20" y="130" width="100" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="70" y="150" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">日本</text>
+
+        <rect x="20" y="200" width="100" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="70" y="220" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">歐洲</text>
+
+        <rect x="20" y="270" width="100" height="50" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="70" y="290" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">巴西</text>
+
+        <!-- Origin -->
+        <rect x="320" y="160" width="120" height="80" fill="#0a0e1a" stroke="#ff6b4a" rx="4"/>
+        <text x="380" y="185" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11" text-anchor="middle">ORIGIN</text>
+        <text x="380" y="207" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">原始伺服器</text>
+        <text x="380" y="225" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">美國</text>
+
+        <!-- 連線 -->
+        <line x1="120" y1="85" x2="318" y2="180" stroke="#ff6b4a" stroke-width="1" marker-end="url(#cdnAr)"/>
+        <line x1="120" y1="155" x2="318" y2="190" stroke="#ff6b4a" stroke-width="1" marker-end="url(#cdnAr)"/>
+        <line x1="120" y1="225" x2="318" y2="210" stroke="#ff6b4a" stroke-width="1" marker-end="url(#cdnAr)"/>
+        <line x1="120" y1="295" x2="318" y2="220" stroke="#ff6b4a" stroke-width="1" marker-end="url(#cdnAr)"/>
+
+        <text x="225" y="370" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">每個使用者都跨太平洋連到美國</text>
+        <text x="225" y="390" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">RTT 200~400ms · 流量集中、伺服器壓力大</text>
+        <text x="225" y="410" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">原始伺服器掛了，全世界都不能用</text>
+
+        <!-- 分隔 -->
+        <line x1="450" y1="20" x2="450" y2="450" stroke="#2a3450" stroke-dasharray="4 4"/>
+
+        <!-- 有 CDN -->
+        <text x="675" y="30" fill="#4ade80" font-family="JetBrains Mono" font-size="12" text-anchor="middle" letter-spacing="2">有 CDN</text>
+
+        <!-- 使用者群 -->
+        <rect x="475" y="60" width="80" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="515" y="85" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">台灣</text>
+
+        <rect x="475" y="130" width="80" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="515" y="155" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">日本</text>
+
+        <rect x="475" y="200" width="80" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="515" y="225" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">歐洲</text>
+
+        <rect x="475" y="270" width="80" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="515" y="295" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">巴西</text>
+
+        <!-- 邊緣節點 -->
+        <rect x="600" y="60" width="100" height="40" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="650" y="80" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">PoP 台北</text>
+        <text x="650" y="95" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">5ms</text>
+
+        <rect x="600" y="130" width="100" height="40" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="650" y="150" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">PoP 東京</text>
+        <text x="650" y="165" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">3ms</text>
+
+        <rect x="600" y="200" width="100" height="40" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="650" y="220" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">PoP 法蘭克福</text>
+        <text x="650" y="235" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">8ms</text>
+
+        <rect x="600" y="270" width="100" height="40" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="650" y="290" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">PoP 聖保羅</text>
+        <text x="650" y="305" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">10ms</text>
+
+        <!-- Origin -->
+        <rect x="770" y="160" width="100" height="80" fill="#0a0e1a" stroke="#ff6b4a" rx="4"/>
+        <text x="820" y="185" fill="#ff6b4a" font-family="JetBrains Mono" font-size="10" text-anchor="middle">ORIGIN</text>
+        <text x="820" y="207" fill="#e8eaf0" font-family="Fraunces" font-size="12" text-anchor="middle">美國</text>
+
+        <!-- 連線 -->
+        <line x1="555" y1="80" x2="598" y2="80" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cdnAr2)"/>
+        <line x1="555" y1="150" x2="598" y2="150" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cdnAr2)"/>
+        <line x1="555" y1="220" x2="598" y2="220" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cdnAr2)"/>
+        <line x1="555" y1="290" x2="598" y2="290" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cdnAr2)"/>
+
+        <line x1="700" y1="150" x2="768" y2="190" stroke="#a8b0c4" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="700" y1="220" x2="768" y2="200" stroke="#a8b0c4" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="730" y="170" fill="#6b7590" font-family="JetBrains Mono" font-size="9">回源</text>
+
+        <text x="675" y="370" fill="#4ade80" font-family="JetBrains Mono" font-size="10" text-anchor="middle">使用者連到最近的 PoP，cache hit 直接回</text>
+        <text x="675" y="390" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">RTT &lt; 20ms · 流量分散、原伺服器負擔小</text>
+        <text x="675" y="410" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">某個 PoP 故障，自動 failover</text>
+      </svg>
+      <p class="diagram-caption">Cloudflare 在全球有 300+ 城市的 PoP，平均到使用者距離 50ms</p>
+    </div>
+  </div>
+</section>
+
+<!-- 快取策略 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Caching · 快取策略</div>
+    <h2>CDN 怎麼<em>知道</em>該不該回快取？</h2>
+    <p class="lead">
+      CDN 不是無腦快取所有東西。哪些可以快取多久、什麼時候要刷新——這些靠 HTTP Header 來控制。
+      理解這些對你之前處理 sino-suisse 遷移很有幫助。
+    </p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">A</div>
+        <div class="step-content">
+          <h3>Cache-Control · 主要的快取指令</h3>
+          <p>
+            最重要的 Header。告訴 CDN 和瀏覽器這份內容能快取多久、誰可以快取。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 公開內容，CDN 和瀏覽器都快取一年</span><br>
+<span class="key">Cache-Control:</span> public, max-age=31536000, immutable<br><br>
+<span class="comment"># 只允許瀏覽器快取（不快取在 CDN）</span><br>
+<span class="key">Cache-Control:</span> private, max-age=3600<br><br>
+<span class="comment"># 完全不快取（每次都要重新請求）</span><br>
+<span class="key">Cache-Control:</span> no-store<br><br>
+<span class="comment"># 可快取，但每次使用前都要驗證</span><br>
+<span class="key">Cache-Control:</span> no-cache
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">B</div>
+        <div class="step-content">
+          <h3>ETag · 內容指紋驗證</h3>
+          <p>
+            伺服器給每份內容一個「指紋」（通常是內容的 hash）。瀏覽器下次來問時，帶上指紋：
+            「我有版本 abc，還是最新嗎？」如果是，伺服器只回 <strong>304 Not Modified</strong>（沒 body，省頻寬）。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 第一次請求</span><br>
+<span class="arrow-line">▸</span> GET /image.png<br>
+<span class="arrow-line">◂</span> 200 OK + <span class="key">ETag: "abc123"</span> + 圖片內容<br><br>
+<span class="comment"># 第二次請求（快取已過期但內容沒變）</span><br>
+<span class="arrow-line">▸</span> GET /image.png<br>
+&nbsp;&nbsp;<span class="key">If-None-Match: "abc123"</span><br>
+<span class="arrow-line">◂</span> <span class="key">304 Not Modified</span> <span class="comment">(沒 body，省 99% 頻寬)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">C</div>
+        <div class="step-content">
+          <h3>Cache Key · 怎麼判斷是「同一個東西」</h3>
+          <p>
+            預設用 URL 當 key，但有些情況需要更細的區分。例如同一個網址但不同語言、不同裝置要看不同內容。
+            <code>Vary: Accept-Language</code> 告訴 CDN「依語言分別快取」。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">D</div>
+        <div class="step-content">
+          <h3>Cache Purge · 強制刷新</h3>
+          <p>
+            內容更新後，怎麼讓 CDN 上的舊版立刻失效？大部分 CDN 提供 <strong>Purge API</strong>，
+            可以指定 URL 或 tag 立即清除。Cloudflare 還支援 <strong>Cache Tag</strong>——
+            一次清掉所有相關內容。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 邊緣運算 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Edge Computing · 邊緣運算</div>
+    <h2>從 CDN 到<br><em>邊緣執行程式</em></h2>
+    <p class="lead">
+      CDN 一開始只是快取靜態內容。後來人們想：既然全球都有節點，何不讓<strong>程式碼也在邊緣執行</strong>？
+      這就是 <strong>Edge Computing</strong>。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 三種運算位置比較</div>
+      <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- 客戶端 -->
+        <rect x="40" y="60" width="240" height="160" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="160" y="90" fill="#60a5fa" font-family="JetBrains Mono" font-size="12" text-anchor="middle">CLIENT-SIDE</text>
+        <text x="160" y="115" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">瀏覽器內</text>
+        <line x1="60" y1="130" x2="260" y2="130" stroke="#2a3450"/>
+        <text x="60" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 互動快</text>
+        <text x="60" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 不需網路</text>
+        <text x="60" y="195" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11">✗ 不能存敏感資料</text>
+
+        <!-- 邊緣 -->
+        <rect x="320" y="60" width="240" height="160" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+        <text x="440" y="90" fill="#fbbf24" font-family="JetBrains Mono" font-size="12" text-anchor="middle">EDGE</text>
+        <text x="440" y="115" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">CDN 邊緣節點</text>
+        <line x1="340" y1="130" x2="540" y2="130" stroke="#2a3450"/>
+        <text x="340" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 距離使用者近</text>
+        <text x="340" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 自動全球擴展</text>
+        <text x="340" y="195" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11">✗ 限制較多（CPU/記憶體）</text>
+
+        <!-- Origin -->
+        <rect x="600" y="60" width="240" height="160" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="720" y="90" fill="#4ade80" font-family="JetBrains Mono" font-size="12" text-anchor="middle">ORIGIN</text>
+        <text x="720" y="115" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">原始伺服器</text>
+        <line x1="620" y1="130" x2="820" y2="130" stroke="#2a3450"/>
+        <text x="620" y="155" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 最強運算能力</text>
+        <text x="620" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11">✓ 完整資料庫存取</text>
+        <text x="620" y="195" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11">✗ 距離遠、有延遲</text>
+      </svg>
+      <p class="diagram-caption">三層各有所長，現代架構會混搭使用</p>
+    </div>
+
+    <div class="tech-callout">
+      <div class="ct-label">Edge 適合做的事</div>
+      <ul>
+        <li><strong>A/B Testing</strong>在邊緣決定使用者看哪個版本</li>
+        <li><strong>身份驗證</strong>JWT 在邊緣驗證，無效直接擋掉</li>
+        <li><strong>圖片即時處理</strong>邊緣節點動態壓縮、轉檔</li>
+        <li><strong>地理路由</strong>依使用者位置導到不同 origin</li>
+        <li><strong>Bot 偵測</strong>過濾爬蟲、惡意流量</li>
+      </ul>
+    </div>
+
+    <div class="tech-callout">
+      <div class="ct-label">主流邊緣平台</div>
+      <ul>
+        <li><strong>Cloudflare Workers</strong>用 V8 isolate，啟動 0ms（你最熟悉的）</li>
+        <li><strong>AWS Lambda@Edge</strong>AWS 的邊緣 Lambda</li>
+        <li><strong>Vercel Edge Functions</strong>Next.js 整合</li>
+        <li><strong>Deno Deploy</strong>原生支援 TypeScript</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="q1-rendering-pipeline.html" class="nav-card prev">
+        <div class="label">上一章 Q1</div>
+        <h4>60fps 的祕密</h4>
+        <p>渲染管線深入</p>
+      </a>
+      <a href="q3-auth.html" class="nav-card next">
+        <div class="label">下一章 Q3</div>
+        <h4>登入背後的祕密</h4>
+        <p>密碼怎麼存、Session vs JWT</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">Web Atlas · Q2 · CDN & Edge</div></footer>
+
+</body>
+</html>

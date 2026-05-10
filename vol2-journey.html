@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vol.02 — 從一次點擊看見整個系統</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="container">
+    <div class="top-bar-inner">
+      <a href="index.html" class="logo">⬢ web.atlas</a>
+      <nav>
+        <a href="index.html">總目錄</a>
+        <a href="vol1-overview.html">領域全貌</a>
+        <a href="vol2-journey.html" class="active">三幕主線</a>
+        <a href="glossary.html">縮寫表</a>
+      </nav>
+      <span>Vol.02</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="kicker">
+      <span class="dot"></span>
+      Vol.02 · A Journey Through The Web
+    </div>
+    <h1>
+      從你按下「<span class="highlight">Enter</span>」<br>
+      到看到 Google 首頁，<br>
+      中間發生了什麼？
+    </h1>
+    <p class="hero-sub">
+      Vol.01 我們看了領域全貌；這一章我們鑽進細節。
+      不從理論教起，而是從<strong style="color:var(--ink)">你每天都做的動作</strong>開始拆解——
+      把它當成一條訊號鏈來追蹤，從你的鍵盤輸入、一路追到伺服器、回到瀏覽器、最後變成你眼前的畫面。
+    </p>
+
+    <div class="scenario-card">
+      <div class="label">⬢ 我們要追蹤的場景</div>
+      <div class="actions">
+        <div class="action-line">
+          <span class="num">01</span><span class="arrow">▸</span>
+          <span>打開瀏覽器，在網址列輸入 <code>google.com</code></span>
+        </div>
+        <div class="action-line">
+          <span class="num">02</span><span class="arrow">▸</span>
+          <span>幾秒後 Google 首頁出現了，而且<strong style="color:var(--accent)">已經是登入狀態</strong></span>
+        </div>
+        <div class="action-line">
+          <span class="num">03</span><span class="arrow">▸</span>
+          <span>點右上角頭像 → 切到 Gmail，<strong style="color:var(--accent)">不用再登入一次</strong></span>
+        </div>
+        <div class="action-line">
+          <span class="num">04</span><span class="arrow">▸</span>
+          <span>點某封信，<strong style="color:var(--accent)">畫面瞬間切換</strong>但網址也變了</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 全景時序圖 -->
+<section class="section">
+  <div class="container">
+    <div class="section-tag">Sequence Diagram · 全景時序圖</div>
+    <h2>四個動作背後的<em>完整時序</em></h2>
+    <p class="lead">
+      下面這張時序圖把上述四個動作攤開來看——縱向是時間軸，橫向是參與的角色（你的瀏覽器、DNS、Google 伺服器、資料庫等）。
+      訊息怎麼流動、誰在等誰，一目瞭然。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ 整體時序：從輸入網址到看見內容</div>
+      <svg viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+          </marker>
+          <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#60a5fa"/>
+          </marker>
+        </defs>
+
+        <!-- 角色標頭 -->
+        <rect x="40" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="100" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">瀏覽器</text>
+
+        <rect x="220" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="280" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">DNS</text>
+
+        <rect x="400" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="460" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">Google 伺服器</text>
+
+        <rect x="580" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="640" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">CDN 邊緣節點</text>
+
+        <rect x="760" y="20" width="120" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+        <text x="820" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">資料庫</text>
+
+        <!-- 角色生命線 -->
+        <line x1="100" y1="60" x2="100" y2="700" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="280" y1="60" x2="280" y2="700" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="460" y1="60" x2="460" y2="700" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="640" y1="60" x2="640" y2="700" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="820" y1="60" x2="820" y2="700" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- Phase 1: DNS -->
+        <rect x="20" y="80" width="60" height="20" fill="#ff6b4a" rx="2"/>
+        <text x="50" y="94" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">第一幕</text>
+
+        <line x1="100" y1="110" x2="280" y2="110" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#ar1)"/>
+        <text x="190" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">① 查 google.com 的 IP</text>
+
+        <line x1="280" y1="135" x2="100" y2="135" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ar1)"/>
+        <text x="190" y="130" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">② 142.250.196.78</text>
+
+        <line x1="100" y1="160" x2="460" y2="160" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#ar1)"/>
+        <text x="280" y="155" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">③ TCP 三次握手 + TLS 加密</text>
+
+        <line x1="100" y1="195" x2="460" y2="195" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#ar1)"/>
+        <text x="280" y="190" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">④ HTTP GET / + Cookie:SID=abc123</text>
+
+        <!-- Phase 2: Identity -->
+        <rect x="20" y="220" width="60" height="20" fill="#4ade80" rx="2"/>
+        <text x="50" y="234" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">第二幕</text>
+
+        <line x1="460" y1="250" x2="820" y2="250" stroke="#4ade80" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <text x="640" y="245" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑤ 查 Session abc123 對應誰</text>
+
+        <line x1="820" y1="275" x2="460" y2="275" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ar2)"/>
+        <text x="640" y="270" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑥ 是 KS（讀出個人化資料）</text>
+
+        <line x1="460" y1="300" x2="640" y2="300" stroke="#4ade80" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <text x="550" y="295" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑦ 組合 HTML</text>
+
+        <line x1="640" y1="325" x2="100" y2="325" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ar2)"/>
+        <text x="370" y="320" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑧ 從最近的 CDN 節點回傳 HTML/CSS/JS</text>
+
+        <!-- Phase 3: Render -->
+        <rect x="20" y="350" width="60" height="20" fill="#60a5fa" rx="2"/>
+        <text x="50" y="364" fill="#0a0e1a" font-family="JetBrains Mono" font-size="10" text-anchor="middle" font-weight="600">第三幕</text>
+
+        <rect x="60" y="380" width="80" height="50" fill="#1a2238" stroke="#60a5fa" rx="2"/>
+        <text x="100" y="400" fill="#60a5fa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑨ 解析</text>
+        <text x="100" y="416" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">+ 渲染畫面</text>
+
+        <!-- 動作 03: 點頭像進 Gmail -->
+        <text x="100" y="455" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⬇ 你點擊頭像 → Gmail</text>
+
+        <line x1="100" y1="475" x2="640" y2="475" stroke="#60a5fa" stroke-width="1.5" marker-end="url(#ar3)"/>
+        <text x="370" y="470" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑩ 請求 mail.google.com（Cookie 自動帶上）</text>
+
+        <line x1="640" y1="500" x2="100" y2="500" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ar3)"/>
+        <text x="370" y="495" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑪ 同樣的 Cookie 認得你 → 直接進 Gmail</text>
+
+        <!-- 動作 04: 點信件 -->
+        <text x="100" y="535" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⬇ 你點擊一封信</text>
+
+        <rect x="60" y="555" width="80" height="40" fill="#1a2238" stroke="#fbbf24" rx="2"/>
+        <text x="100" y="572" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑫ JS 攔截</text>
+        <text x="100" y="586" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">不重整</text>
+
+        <line x1="100" y1="615" x2="460" y2="615" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#ar1)"/>
+        <text x="280" y="610" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑬ AJAX/Fetch 只要信件內容（JSON）</text>
+
+        <line x1="460" y1="640" x2="100" y2="640" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#ar1)"/>
+        <text x="280" y="635" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑭ 只回傳這封信的資料</text>
+
+        <rect x="60" y="660" width="80" height="35" fill="#1a2238" stroke="#fbbf24" rx="2"/>
+        <text x="100" y="678" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">⑮ 局部更新</text>
+        <text x="100" y="690" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">DOM</text>
+      </svg>
+      <p class="diagram-caption">完整 15 個訊息流動，分為三幕。下面我們逐幕展開。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 第一幕：連線 -->
+<section class="section" id="step1">
+  <div class="container">
+    <div class="section-tag">第一幕 · The Connection</div>
+    <h2>你輸入網址後，<br>瀏覽器<em>怎麼找到 Google</em>？</h2>
+    <p class="lead">
+      你輸入的是「google.com」，但網路世界其實只認 IP 位址（像 142.250.196.78）。
+      所以瀏覽器要做的第一件事，就是<strong>把名字翻譯成地址</strong>。
+    </p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">1.1</div>
+        <div class="step-content">
+          <h3>查地址簿：DNS 解析</h3>
+          <div class="step-sub"><span class="acronym">DNS<span class="full">Domain Name System · 網域名稱系統</span></span> 網域名稱系統</div>
+          <p>
+            瀏覽器先問你的電腦：「google.com 的 IP 是多少？」電腦如果不知道，就去問你家路由器；路由器不知道，就問
+            <span class="acronym">ISP<span class="full">Internet Service Provider</span></span>（中華電信、Hinet）的 DNS 伺服器；
+            一路問下去直到找到答案。這整個過程通常<strong>10 毫秒內完成</strong>，而且結果會被快取，下次更快。
+          </p>
+
+          <div class="diagram">
+            <div class="diagram-title">▸ DNS 查詢層級</div>
+            <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="dnsAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+                </marker>
+              </defs>
+
+              <!-- 你的電腦 -->
+              <rect x="40" y="100" width="120" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+              <text x="100" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">你的電腦</text>
+              <text x="100" y="148" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">本機 DNS 快取</text>
+              <text x="100" y="166" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 0ms</text>
+
+              <!-- 路由器 -->
+              <rect x="200" y="100" width="120" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+              <text x="260" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">家用路由器</text>
+              <text x="260" y="148" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">區網 DNS</text>
+              <text x="260" y="166" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 1ms</text>
+
+              <!-- ISP DNS -->
+              <rect x="360" y="100" width="120" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
+              <text x="420" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">ISP DNS</text>
+              <text x="420" y="148" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">中華電信</text>
+              <text x="420" y="166" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">~ 10ms</text>
+
+              <!-- Root DNS -->
+              <rect x="520" y="40" width="120" height="60" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+              <text x="580" y="62" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">根 DNS</text>
+              <text x="580" y="82" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">. 「.com 在哪？」</text>
+
+              <!-- TLD DNS -->
+              <rect x="520" y="120" width="120" height="60" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+              <text x="580" y="142" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">.com TLD</text>
+              <text x="580" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">「google 在哪？」</text>
+
+              <!-- Authoritative -->
+              <rect x="520" y="200" width="120" height="60" fill="#1a2238" stroke="#fbbf24" rx="4"/>
+              <text x="580" y="222" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">權威 DNS</text>
+              <text x="580" y="242" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Google 自家 DNS</text>
+
+              <!-- IP 結果 -->
+              <rect x="680" y="120" width="100" height="60" fill="#0a0e1a" stroke="#4ade80" rx="4"/>
+              <text x="730" y="145" fill="#4ade80" font-family="JetBrains Mono" font-size="11" text-anchor="middle">142.250.</text>
+              <text x="730" y="160" fill="#4ade80" font-family="JetBrains Mono" font-size="11" text-anchor="middle">196.78</text>
+              <text x="730" y="175" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">IP 位址</text>
+
+              <!-- 箭頭 -->
+              <line x1="160" y1="140" x2="195" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#dnsAr)"/>
+              <line x1="320" y1="140" x2="355" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#dnsAr)"/>
+              <line x1="480" y1="120" x2="515" y2="80" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#dnsAr)"/>
+              <line x1="480" y1="140" x2="515" y2="150" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#dnsAr)"/>
+              <line x1="480" y1="160" x2="515" y2="220" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#dnsAr)"/>
+              <line x1="640" y1="225" x2="730" y2="180" stroke="#4ade80" stroke-width="1.5" marker-end="url(#dnsAr)"/>
+            </svg>
+            <p class="diagram-caption">逐層問，找到答案後沿路快取，下次同網域查詢只需 0~1ms</p>
+          </div>
+
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>DNS</strong>把網域名稱翻譯成 IP 位址</li>
+              <li><strong>Cache</strong>查過的會暫存，避免每次都重查</li>
+              <li><strong>TTL</strong>Time-To-Live，快取保留多久（你之前處理 sino-suisse.com CDN 遷移時碰過）</li>
+              <li><strong>Record Type</strong>A 記錄（指向 IP）、CNAME（指向別的網域）、MX（郵件伺服器）等</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">1.2</div>
+        <div class="step-content">
+          <h3>建立連線：TCP 三次握手 + TLS 加密</h3>
+          <div class="step-sub">TCP / TLS Handshake</div>
+          <p>
+            拿到 IP 後，瀏覽器跟 Google 伺服器「打招呼」建立連線。這像兩個人通話前要先確認「你聽得到嗎？聽得到，你呢？我也聽得到」——
+            這就是 <strong><span class="acronym">TCP<span class="full">Transmission Control Protocol</span></span> 三次握手</strong>。
+            確認連得上之後，再做一次<strong><span class="acronym">TLS<span class="full">Transport Layer Security</span></span> 加密協商</strong>，
+            雙方交換金鑰，之後所有對話都會被加密——這就是網址前面那個 <code>https://</code> 的鎖頭由來。
+          </p>
+
+          <div class="flow-illustration">
+<span class="comment"># TCP 三次握手</span><br>
+瀏覽器 <span class="arrow-line">─SYN─▸</span> 伺服器 &nbsp;&nbsp;<span class="comment">「我要連你」</span><br>
+瀏覽器 <span class="arrow-line">◂SYN+ACK─</span> 伺服器 &nbsp;<span class="comment">「OK，你也要回應我」</span><br>
+瀏覽器 <span class="arrow-line">─ACK─▸</span> 伺服器 &nbsp;&nbsp;<span class="comment">「收到，連線建立」</span><br><br>
+<span class="comment"># TLS 加密協商（簡化版）</span><br>
+瀏覽器 <span class="arrow-line">─▸</span> Hello + 支援的加密套件 <span class="arrow-line">─▸</span> 伺服器<br>
+伺服器 <span class="arrow-line">─▸</span> 選定的套件 + <span class="key">SSL 憑證</span> <span class="arrow-line">─▸</span> 瀏覽器<br>
+雙方 <span class="arrow-line">─▸</span> 交換金鑰 <span class="arrow-line">─▸</span> <span class="key">後續通訊全部加密</span> 🔒
+          </div>
+
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>TCP</strong>確保資料能可靠送達的傳輸協定</li>
+              <li><strong>HTTPS</strong>HTTP + TLS = 加密過的網頁協定</li>
+              <li><strong>SSL 憑證</strong>由公信第三方（如 Let's Encrypt）簽發，證明「我真的是 google.com 不是釣魚網站」</li>
+              <li><strong>HTTP/2、HTTP/3</strong>更新更快的版本（HTTP/3 用 QUIC 協定，基於 UDP）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">1.3</div>
+        <div class="step-content">
+          <h3>送出請求：HTTP Request</h3>
+          <div class="step-sub">The Request</div>
+          <p>
+            連線建好了，瀏覽器送出一個<strong>請求</strong>，告訴 Google 伺服器：
+            「我要拿 / 這個路徑的內容，我用的是 Chrome 瀏覽器，我接受 zh-TW 語言…」
+            這份請求由「方法（GET）+ 路徑 + 標頭（Headers）+ 內容（Body）」組成。
+          </p>
+          <div class="flow-illustration">
+<span class="key">GET</span> / HTTP/2<br>
+<span class="key">Host:</span> google.com<br>
+<span class="key">User-Agent:</span> Chrome/120 (Macintosh)<br>
+<span class="key">Accept-Language:</span> zh-TW<br>
+<span class="key">Cookie:</span> SID=xxxxx... <span class="comment">← 這個 Cookie 是登入的關鍵！</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">1.4</div>
+        <div class="step-content">
+          <h3>伺服器回應：HTTP Response</h3>
+          <div class="step-sub">The Response</div>
+          <p>
+            Google 的伺服器收到請求，根據你的 Cookie 知道「啊這是 KS」，
+            就準備一份<strong>專屬於你的 HTML 文件</strong>送回來（已經帶有你的頭像、最近搜尋紀錄等）。
+            回應裡含 HTML、CSS、JavaScript、圖片等資源，瀏覽器收到後開始解析、渲染成畫面。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>Status Code</strong>200 OK / 301 重新導向 / 404 找不到 / 500 伺服器錯誤</li>
+              <li><strong>HTML</strong>HyperText Markup Language，網頁的結構（骨架）</li>
+              <li><strong>CSS</strong>Cascading Style Sheets，樣式（皮膚）</li>
+              <li><strong>JS / JavaScript</strong>互動邏輯（神經系統）</li>
+              <li><strong>CDN</strong>Content Delivery Network，把這些資源放在離你最近的伺服器（你熟悉的 Cloudflare）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 第二幕：身份 -->
+<section class="section" id="step2">
+  <div class="container">
+    <div class="section-tag">第二幕 · The Identity</div>
+    <h2>為什麼<em>不用每次登入</em>？<br>跨服務又怎麼共用帳號？</h2>
+    <p class="lead">
+      HTTP 其實是<strong>無狀態</strong>的協定——伺服器每收到一次請求都不認識你。
+      那為什麼你關掉瀏覽器明天打開還是登入狀態？這靠的是 Cookie + Session + Token 這套機制。
+    </p>
+
+    <div class="diagram">
+      <div class="diagram-title">▸ Cookie 在跨子網域的共用機制</div>
+      <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- 中央 Cookie -->
+        <rect x="320" y="130" width="160" height="60" fill="#0a0e1a" stroke="#fbbf24" rx="4"/>
+        <text x="400" y="155" fill="#fbbf24" font-family="JetBrains Mono" font-size="13" text-anchor="middle">Cookie SID=abc123</text>
+        <text x="400" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">Domain=.google.com</text>
+
+        <!-- google.com -->
+        <rect x="60" y="40" width="160" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="140" y="65" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">google.com</text>
+        <text x="140" y="85" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">搜尋首頁</text>
+
+        <!-- mail.google.com -->
+        <rect x="60" y="220" width="160" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="140" y="245" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">mail.google.com</text>
+        <text x="140" y="265" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Gmail</text>
+
+        <!-- drive.google.com -->
+        <rect x="580" y="40" width="160" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="660" y="65" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">drive.google.com</text>
+        <text x="660" y="85" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">雲端硬碟</text>
+
+        <!-- calendar.google.com -->
+        <rect x="580" y="220" width="160" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="660" y="245" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">calendar.google.com</text>
+        <text x="660" y="265" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">日曆</text>
+
+        <!-- 連線 -->
+        <line x1="220" y1="70" x2="320" y2="145" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="220" y1="250" x2="320" y2="175" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="480" y1="145" x2="580" y2="70" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="480" y1="175" x2="580" y2="250" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+        <text x="400" y="295" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">所有 *.google.com 結尾的網站，都自動帶上同一個 Cookie</text>
+      </svg>
+      <p class="diagram-caption">Cookie 的 Domain 設定為 .google.com，讓所有子網域共用登入狀態（SSO 的基礎）</p>
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">2.1</div>
+        <div class="step-content">
+          <h3>第一次登入：拿到一張「通行證」</h3>
+          <div class="step-sub">Session & Cookie</div>
+          <p>
+            你第一次輸入帳號密碼，伺服器驗證通過後，會做兩件事：
+            ① 在伺服器端記下「KS 這個人有效，編號 abc123」；
+            ② 把編號 <code>abc123</code> 寫進你瀏覽器的 <strong>Cookie</strong> 裡。
+            之後每次發送請求，瀏覽器都會自動把這個 Cookie 帶上去——伺服器一看就知道：「喔是 KS」。
+          </p>
+          <div class="flow-illustration">
+<span class="comment"># 登入後，伺服器回傳的 Header 裡會有：</span><br>
+<span class="key">Set-Cookie:</span> SID=abc123; Domain=.google.com; <br>
+<span style="margin-left:80px">HttpOnly; Secure; Max-Age=2592000</span><br><br>
+<span class="comment"># 之後每次請求 google.com 旗下任何網站</span><br>
+<span class="comment"># 瀏覽器都會自動帶上這個 SID</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2.2</div>
+        <div class="step-content">
+          <h3>關鍵在 Domain：為什麼 Gmail、Drive 都認得你？</h3>
+          <div class="step-sub"><span class="acronym">SSO<span class="full">Single Sign-On</span></span> 單一登入</div>
+          <p>
+            Cookie 設定時可以指定 <code>Domain=.google.com</code>，
+            意思是<strong>「凡是 *.google.com 結尾的網站都共用這個 Cookie」</strong>。
+            所以你登入 google.com 之後，瀏覽器去 mail.google.com、drive.google.com，
+            這個 Cookie 都會被帶過去——這就是<strong>單一登入（SSO）</strong>的基礎。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>Cookie Domain</strong>決定哪些子網域共用 Cookie</li>
+              <li><strong>SSO</strong>Single Sign-On，登入一次多服務通用</li>
+              <li><strong>OAuth 2.0</strong>跨網域授權的標準協定（「用 Google 登入」的原理，詳見 Option B）</li>
+              <li><strong>JWT</strong>JSON Web Token，另一種身份識別格式，把資訊直接編碼在 Token 裡</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2.3</div>
+        <div class="step-content">
+          <h3>關掉瀏覽器再開，為什麼還登入著？</h3>
+          <div class="step-sub">Persistent Cookie</div>
+          <p>
+            Cookie 有兩種：<strong>Session Cookie</strong>（關閉瀏覽器就消失）和
+            <strong>Persistent Cookie</strong>（指定有效期，存在硬碟裡）。
+            Google 給你的是後者，<code>Max-Age=2592000</code> 代表 30 天有效。
+            所以你關機、重開、隔天再登入，Cookie 還在，伺服器看到 SID 還沒過期就直接認得你。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">2.4</div>
+        <div class="step-content">
+          <h3>安全性：為什麼 Cookie 不會被偷？</h3>
+          <div class="step-sub">Security Flags</div>
+          <p>Cookie 上會帶幾個安全標記：</p>
+          <div class="tech-callout">
+            <div class="ct-label">Cookie 的安全護欄</div>
+            <ul>
+              <li><strong>HttpOnly</strong>JavaScript 讀不到，防止 XSS 攻擊偷 Cookie</li>
+              <li><strong>Secure</strong>只在 HTTPS 連線傳送，不走明文</li>
+              <li><strong>SameSite</strong>限制跨站請求帶 Cookie，防 CSRF 攻擊</li>
+              <li><strong>CSP</strong>Content Security Policy，限制可載入的資源來源（防止注入惡意腳本）</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 第三幕：跳轉 -->
+<section class="section" id="step3">
+  <div class="container">
+    <div class="section-tag">第三幕 · The Navigation</div>
+    <h2>為什麼點按鈕<br>畫面就<em>瞬間切換</em>？</h2>
+    <p class="lead">
+      早期網站每次點連結，整個頁面會重新載入（白一下再出現）。現代網站像 Gmail、Notion 點什麼幾乎都不重整，畫面切得超快——這背後是兩種完全不同的架構思路。
+    </p>
+
+    <!-- MPA vs SPA 對比圖 -->
+    <div class="diagram">
+      <div class="diagram-title">▸ MPA vs SPA 架構對比</div>
+      <svg viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="cmpAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+          </marker>
+        </defs>
+
+        <!-- MPA -->
+        <text x="220" y="35" fill="#ff6b4a" font-family="JetBrains Mono" font-size="12" text-anchor="middle" letter-spacing="2">MPA · MULTI-PAGE</text>
+        <text x="220" y="55" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">傳統多頁式</text>
+
+        <rect x="60" y="80" width="100" height="60" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="110" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">點擊連結</text>
+        <text x="110" y="123" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">/page1</text>
+
+        <rect x="180" y="80" width="100" height="60" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="230" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">伺服器</text>
+        <text x="230" y="123" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">完整 HTML</text>
+
+        <rect x="300" y="80" width="100" height="60" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
+        <text x="350" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">整頁重繪</text>
+        <text x="350" y="123" fill="#fbbf24" font-family="JetBrains Mono" font-size="9" text-anchor="middle">白屏 ⚠</text>
+
+        <line x1="160" y1="110" x2="178" y2="110" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#cmpAr)"/>
+        <line x1="280" y1="110" x2="298" y2="110" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#cmpAr)"/>
+
+        <text x="220" y="170" fill="#a8b0c4" font-family="Noto Sans TC" font-size="12" text-anchor="middle">優點：架構簡單、SEO 友善</text>
+        <text x="220" y="190" fill="#a8b0c4" font-family="Noto Sans TC" font-size="12" text-anchor="middle">缺點：每次都要重新載入整頁</text>
+
+        <text x="220" y="225" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">代表：維基百科、新聞網站、部落格</text>
+
+        <!-- 分隔線 -->
+        <line x1="450" y1="40" x2="450" y2="370" stroke="#2a3450" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- SPA -->
+        <text x="680" y="35" fill="#4ade80" font-family="JetBrains Mono" font-size="12" text-anchor="middle" letter-spacing="2">SPA · SINGLE-PAGE</text>
+        <text x="680" y="55" fill="#e8eaf0" font-family="Fraunces" font-size="14" text-anchor="middle">單頁應用</text>
+
+        <rect x="500" y="80" width="80" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="540" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">點擊連結</text>
+        <text x="540" y="123" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">/page1</text>
+
+        <rect x="600" y="80" width="80" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="640" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">JS 攔截</text>
+        <text x="640" y="123" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">不重整</text>
+
+        <rect x="700" y="80" width="80" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="740" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">API</text>
+        <text x="740" y="123" fill="#6b7590" font-family="JetBrains Mono" font-size="9" text-anchor="middle">JSON</text>
+
+        <rect x="800" y="80" width="80" height="60" fill="#1a2238" stroke="#4ade80" rx="4"/>
+        <text x="840" y="105" fill="#e8eaf0" font-family="JetBrains Mono" font-size="10" text-anchor="middle">換 DOM</text>
+        <text x="840" y="123" fill="#4ade80" font-family="JetBrains Mono" font-size="9" text-anchor="middle">無感 ✓</text>
+
+        <line x1="580" y1="110" x2="598" y2="110" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cmpAr)"/>
+        <line x1="680" y1="110" x2="698" y2="110" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cmpAr)"/>
+        <line x1="780" y1="110" x2="798" y2="110" stroke="#4ade80" stroke-width="1.5" marker-end="url(#cmpAr)"/>
+
+        <text x="680" y="170" fill="#a8b0c4" font-family="Noto Sans TC" font-size="12" text-anchor="middle">優點：切換快、體驗滑順</text>
+        <text x="680" y="190" fill="#a8b0c4" font-family="Noto Sans TC" font-size="12" text-anchor="middle">缺點：首次載入較重、SEO 較難</text>
+
+        <text x="680" y="225" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">代表：Gmail、Notion、Figma、Trello</text>
+
+        <!-- 第三條路 -->
+        <rect x="200" y="270" width="500" height="80" fill="#0a0e1a" stroke="#60a5fa" stroke-dasharray="4 4" rx="4"/>
+        <text x="450" y="295" fill="#60a5fa" font-family="JetBrains Mono" font-size="12" text-anchor="middle" letter-spacing="2">SSR · HYBRID · 兩者混合</text>
+        <text x="450" y="318" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">伺服器先渲染好 HTML（快、SEO 好）</text>
+        <text x="450" y="338" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">瀏覽器收到後再「啟動」JS 變成 SPA → 後續切換快</text>
+      </svg>
+      <p class="diagram-caption">三種架構並存於現代網頁世界，各有適用場景</p>
+    </div>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-marker">3.1</div>
+        <div class="step-content">
+          <h3>傳統做法：每次點擊重新載入整頁</h3>
+          <div class="step-sub"><span class="acronym">MPA<span class="full">Multi-Page Application</span></span> 多頁式應用</div>
+          <p>
+            <strong>MPA</strong>（Multi-Page Application）的意思是「多頁式應用」——網站由很多獨立 HTML 頁面組成。
+            點擊連結 → 瀏覽器發新請求 → 伺服器回傳一份新的 HTML → 整個頁面重新渲染。
+            缺點是<strong>慢、有白屏</strong>，但好處是架構單純、<span class="acronym">SEO<span class="full">Search Engine Optimization</span></span>（搜尋引擎優化）友善。
+            維基百科、新聞網站多半是這種架構。
+          </p>
+          <p style="font-size:14px;color:var(--ink-3);font-style:italic;">
+            為什麼 SEO 友善？因為 Google 爬蟲打開每個 URL 都直接拿到完整的 HTML 內容，能讀懂頁面在講什麼。
+            SPA 早期被批評「Google 看不懂」就是這個原因。
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3.2</div>
+        <div class="step-content">
+          <h3>現代做法：只換中間那塊</h3>
+          <div class="step-sub"><span class="acronym">SPA<span class="full">Single-Page Application</span></span> 單頁應用</div>
+          <p>
+            <strong>SPA</strong>（Single-Page Application）的意思是「單頁應用」——整個網站其實只是一張 HTML 頁面，所有切換都在這張頁上完成。
+            首次載入時就把整個 App 的「框架」抓下來（HTML + JS + CSS）。之後你點任何按鈕，
+            <strong>JavaScript 攔截點擊事件</strong>，只去後端要「需要更新的那塊資料」（透過 API），
+            拿回來後動態替換 DOM 裡的某個區塊——網址也用 <code>history.pushState()</code> 換掉，
+            看起來像跳頁，其實沒重新載入。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>DOM</strong>Document Object Model，瀏覽器把 HTML 解析成的物件樹，JS 操作的對象</li>
+              <li><strong>API</strong>Application Programming Interface，後端開放給前端呼叫的資料介面</li>
+              <li><strong>AJAX</strong>Asynchronous JavaScript and XML，老派但常用的非同步請求技術</li>
+              <li><strong>Fetch</strong>現代版的 AJAX，內建在瀏覽器</li>
+              <li><strong>JSON</strong>JavaScript Object Notation，API 之間傳資料的格式</li>
+              <li><strong>React / Vue</strong>幫你管理「資料變了 → DOM 怎麼更新」的框架</li>
+              <li><strong>Router</strong>處理「網址變了但不重整」的邏輯</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-marker">3.3</div>
+        <div class="step-content">
+          <h3>第三條路：兩者混合</h3>
+          <div class="step-sub">SSR / SSG / Hydration</div>
+          <p>
+            SPA 雖然快，但首次載入很重，而且搜尋引擎抓不到內容。
+            所以現代框架（Next.js、Nuxt）走<strong>混合路線</strong>：首頁由伺服器先渲染好 HTML 送來（快、SEO 好），
+            瀏覽器收到後再「啟動」JavaScript 讓它變成 SPA（後續切換快）。這個過程叫 <strong>Hydration（水合）</strong>。
+          </p>
+          <div class="tech-callout">
+            <div class="ct-label">這層牽涉的概念</div>
+            <ul>
+              <li><strong>SSR</strong>Server-Side Rendering，伺服器端先渲染（每次請求即時產生）</li>
+              <li><strong>SSG</strong>Static Site Generation，建置時就產生靜態 HTML（最快）</li>
+              <li><strong>CSR</strong>Client-Side Rendering，瀏覽器端渲染（傳統 SPA 模式）</li>
+              <li><strong>Hydration</strong>讓伺服器渲染的 HTML「活過來」變成可互動的 SPA</li>
+              <li><strong>Next.js / Nuxt / SvelteKit</strong>主流的混合架構框架</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 章節導覽 -->
+<section class="chapter-nav">
+  <div class="container">
+    <div class="chapter-nav-grid">
+      <a href="vol1-overview.html" class="nav-card prev">
+        <div class="label">上一章 Vol.01</div>
+        <h4>網頁設計六大領域全貌</h4>
+        <p>從鳥瞰視角看完整領域</p>
+      </a>
+      <a href="opt-a-rendering.html" class="nav-card next">
+        <div class="label">下一章 Option A</div>
+        <h4>瀏覽器如何把 HTML 變成畫面</h4>
+        <p>渲染管線完整拆解</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Web Atlas · Vol.02 · The Journey
+  </div>
+</footer>
+
+</body>
+</html>
