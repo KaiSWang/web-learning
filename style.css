@@ -23,7 +23,7 @@ body {
   font-family: 'Source Serif 4', 'Noto Serif TC', Georgia, serif;
   background: var(--paper);
   color: var(--ink);
-  font-size: 18px;
+  font-size: var(--reader-fz, 18px);
   line-height: 1.75;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -133,7 +133,7 @@ h1, h2, h3, h4 {
 .hero h1 br { display: block; content: ''; margin-top: 4px; }
 
 .hero-sub {
-  font-size: 17px;
+  font-size: 0.95em;
   color: var(--ink-2);
   line-height: 1.8;
   text-align: left;
@@ -182,7 +182,7 @@ h1, h2, h3, h4 {
 }
 
 .section .lead {
-  font-size: 18px;
+  font-size: 1em;
   color: var(--ink-2);
   line-height: 1.8;
   margin-bottom: 36px;
@@ -256,7 +256,7 @@ h1, h2, h3, h4 {
 }
 
 .step-content p {
-  font-size: 16px;
+  font-size: 0.9em;
   color: var(--ink-2);
   line-height: 1.8;
   margin-bottom: 12px;
@@ -314,7 +314,7 @@ h1, h2, h3, h4 {
 }
 
 .tech-callout li {
-  font-size: 15px;
+  font-size: 0.85em;
   color: var(--ink-2);
   display: flex;
   gap: 10px;
@@ -441,7 +441,7 @@ h1, h2, h3, h4 {
 }
 
 .nav-card p {
-  font-size: 13px;
+  font-size: 0.75em;
   color: var(--ink-2);
   line-height: 1.55;
 }
@@ -479,7 +479,7 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  font-size: 16px;
+  font-size: 0.9em;
   color: var(--ink);
   line-height: 1.7;
 }
@@ -517,7 +517,7 @@ footer {
   width: 100%;
   border-collapse: collapse;
   margin: 24px 0;
-  font-size: 14px;
+  font-size: 0.8em;
   background: var(--paper);
   border-top: 2px solid var(--ink);
   border-bottom: 1px solid var(--ink);
@@ -592,14 +592,14 @@ footer {
 }
 
 .gloss-item .desc {
-  font-size: 15px;
+  font-size: 0.85em;
   color: var(--ink-2);
   line-height: 1.65;
 }
 
 /* ============ Responsive ============ */
 @media (max-width: 600px) {
-  body { font-size: 17px; }
+  body { font-size: var(--reader-fz, 17px); }
   .container { padding: 0 20px; }
   .hero { padding: 60px 0 44px; }
   .step { grid-template-columns: 44px 1fr; gap: 16px; padding: 22px 0; }
@@ -627,3 +627,57 @@ footer {
 
 /* 全域選取色 */
 ::selection { background: var(--highlight); color: var(--ink); }
+
+/* ============ 字體大小控制 ============ */
+.font-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fz-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-family: 'Source Serif 4', 'Noto Serif TC', Georgia, serif;
+  font-size: 13px;
+  padding: 3px 9px 4px;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  transition: border-color 0.2s, color 0.2s, background 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fz-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.fz-btn:active {
+  background: var(--paper-2);
+}
+
+.fz-btn .fz-sym {
+  font-size: 1.15em;
+  vertical-align: -1px;
+  margin-left: 1px;
+  font-weight: 600;
+}
+
+.fz-btn[data-action="reset"] {
+  font-size: 11px;
+  padding: 4px 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+@media (max-width: 600px) {
+  .font-control { gap: 4px; }
+  .fz-btn { padding: 2px 8px 3px; font-size: 12px; }
+  .fz-btn[data-action="reset"] { display: none; }
+}
