@@ -1,0 +1,8 @@
+# Personal / non-public artefacts (NEVER deploy to Pages)
+ryan_*.html
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/

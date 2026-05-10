@@ -32,9 +32,22 @@ body {
 }
 
 .container {
-  max-width: 680px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
+}
+
+/* 即使外層容器寬到 1180px, 長文閱讀仍維持書本式
+   ~820px 中欄, 但圖表/目錄/字彙表可佔滿整個容器。*/
+.section .section-tag,
+.section h2,
+.section .lead,
+.section > .container > p,
+.steps,
+.scenario-card,
+.tech-callout,
+.flow-illustration {
+  max-width: 820px;
 }
 
 /* ============ 頂部導覽列 ============ */
@@ -118,10 +131,13 @@ h1, h2, h3, h4 {
 }
 
 .hero h1 {
-  font-size: clamp(36px, 6vw, 56px);
-  line-height: 1.15;
+  font-size: clamp(38px, 6.4vw, 76px);
+  line-height: 1.1;
   margin-bottom: 32px;
   font-weight: 400;
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero h1 em, .hero h1 .highlight {
@@ -170,8 +186,8 @@ h1, h2, h3, h4 {
 .section-tag::before { display: none; }
 
 .section h2 {
-  font-size: clamp(28px, 4vw, 38px);
-  line-height: 1.2;
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 1.15;
   margin-bottom: 20px;
   font-weight: 400;
 }
@@ -556,8 +572,8 @@ footer {
 /* ============ Glossary 縮寫表 ============ */
 .glossary {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 0 36px;
   margin: 24px 0;
 }
 
