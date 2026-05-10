@@ -6,7 +6,7 @@
 <title>Option B — OAuth 完整拆解</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Noto+Serif+TC:wght;500;700&family=IBM+Plex+Mono:wght;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -55,35 +55,35 @@
       <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="bAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+            <path d="M0,0 L10,5 L0,10 z" fill="#8b3a1e"/>
           </marker>
         </defs>
 
-        <rect x="40" y="100" width="160" height="80" fill="#1a2238" stroke="#60a5fa" rx="4"/>
-        <text x="120" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">你</text>
-        <text x="120" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">想用第三方服務</text>
-        <text x="120" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">管理你的 Gmail</text>
+        <rect x="40" y="100" width="160" height="80" fill="#f3ede2" stroke="#2c5d8f" rx="4"/>
+        <text x="120" y="125" fill="#2a2520" font-family="Source Serif 4" font-size="13" text-anchor="middle">你</text>
+        <text x="120" y="145" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">想用第三方服務</text>
+        <text x="120" y="162" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">管理你的 Gmail</text>
 
-        <rect x="320" y="100" width="160" height="80" fill="#1a2238" stroke="#ff6b4a" rx="4"/>
-        <text x="400" y="125" fill="#ff6b4a" font-family="Fraunces" font-size="13" text-anchor="middle">第三方網站</text>
-        <text x="400" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">存你的密碼</text>
-        <text x="400" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">假裝是你登入</text>
+        <rect x="320" y="100" width="160" height="80" fill="#f3ede2" stroke="#8b3a1e" rx="4"/>
+        <text x="400" y="125" fill="#8b3a1e" font-family="Source Serif 4" font-size="13" text-anchor="middle">第三方網站</text>
+        <text x="400" y="145" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">存你的密碼</text>
+        <text x="400" y="162" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">假裝是你登入</text>
 
-        <rect x="600" y="100" width="160" height="80" fill="#1a2238" stroke="#4ade80" rx="4"/>
-        <text x="680" y="125" fill="#e8eaf0" font-family="Fraunces" font-size="13" text-anchor="middle">Google</text>
-        <text x="680" y="145" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">無法分辨</text>
-        <text x="680" y="162" fill="#a8b0c4" font-family="JetBrains Mono" font-size="10" text-anchor="middle">是你還是它</text>
+        <rect x="600" y="100" width="160" height="80" fill="#f3ede2" stroke="#2d6a3e" rx="4"/>
+        <text x="680" y="125" fill="#2a2520" font-family="Source Serif 4" font-size="13" text-anchor="middle">Google</text>
+        <text x="680" y="145" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">無法分辨</text>
+        <text x="680" y="162" fill="#5a4f44" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">是你還是它</text>
 
-        <line x1="200" y1="140" x2="318" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bAr)"/>
-        <text x="259" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">給帳號密碼</text>
+        <line x1="200" y1="140" x2="318" y2="140" stroke="#8b3a1e" stroke-width="1.5" marker-end="url(#bAr)"/>
+        <text x="259" y="135" fill="#b8860b" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">給帳號密碼</text>
 
-        <line x1="480" y1="140" x2="598" y2="140" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#bAr)"/>
-        <text x="539" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">用你的密碼</text>
+        <line x1="480" y1="140" x2="598" y2="140" stroke="#8b3a1e" stroke-width="1.5" marker-end="url(#bAr)"/>
+        <text x="539" y="135" fill="#b8860b" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">用你的密碼</text>
 
-        <text x="400" y="225" fill="#ff6b4a" font-family="JetBrains Mono" font-size="12" text-anchor="middle">⚠ 三大問題：</text>
-        <text x="400" y="245" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">① 第三方拿到你的真實密碼</text>
-        <text x="400" y="262" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">② 第三方擁有所有權限（包括刪除帳號）</text>
-        <text x="400" y="279" fill="#a8b0c4" font-family="Noto Sans TC" font-size="11" text-anchor="middle">③ 你想撤銷只能改密碼（連自己都得重登）</text>
+        <text x="400" y="225" fill="#8b3a1e" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">⚠ 三大問題：</text>
+        <text x="400" y="245" fill="#5a4f44" font-family="Noto Serif TC" font-size="11" text-anchor="middle">① 第三方拿到你的真實密碼</text>
+        <text x="400" y="262" fill="#5a4f44" font-family="Noto Serif TC" font-size="11" text-anchor="middle">② 第三方擁有所有權限（包括刪除帳號）</text>
+        <text x="400" y="279" fill="#5a4f44" font-family="Noto Serif TC" font-size="11" text-anchor="middle">③ 你想撤銷只能改密碼（連自己都得重登）</text>
       </svg>
     </div>
   </div>
@@ -104,103 +104,103 @@
       <svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="oAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+            <path d="M0,0 L10,5 L0,10 z" fill="#2d6a3e"/>
           </marker>
           <marker id="oArOrange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+            <path d="M0,0 L10,5 L0,10 z" fill="#8b3a1e"/>
           </marker>
         </defs>
 
         <!-- 角色 -->
-        <rect x="40" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
-        <text x="120" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">你 (User)</text>
+        <rect x="40" y="20" width="160" height="40" fill="#f3ede2" stroke="#2c5d8f" rx="4"/>
+        <text x="120" y="45" fill="#2a2520" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">你 (User)</text>
 
-        <rect x="240" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
-        <text x="320" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">第三方 App</text>
+        <rect x="240" y="20" width="160" height="40" fill="#f3ede2" stroke="#2c5d8f" rx="4"/>
+        <text x="320" y="45" fill="#2a2520" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">第三方 App</text>
 
-        <rect x="440" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
-        <text x="520" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">Google 登入頁</text>
+        <rect x="440" y="20" width="160" height="40" fill="#f3ede2" stroke="#2c5d8f" rx="4"/>
+        <text x="520" y="45" fill="#2a2520" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">Google 登入頁</text>
 
-        <rect x="640" y="20" width="160" height="40" fill="#1a2238" stroke="#60a5fa" rx="4"/>
-        <text x="720" y="45" fill="#e8eaf0" font-family="JetBrains Mono" font-size="12" text-anchor="middle">Google API</text>
+        <rect x="640" y="20" width="160" height="40" fill="#f3ede2" stroke="#2c5d8f" rx="4"/>
+        <text x="720" y="45" fill="#2a2520" font-family="IBM Plex Mono" font-size="12" text-anchor="middle">Google API</text>
 
         <!-- 生命線 -->
-        <line x1="120" y1="60" x2="120" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
-        <line x1="320" y1="60" x2="320" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
-        <line x1="520" y1="60" x2="520" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
-        <line x1="720" y1="60" x2="720" y2="690" stroke="#2a3450" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="120" y1="60" x2="120" y2="690" stroke="#d9cfbf" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="320" y1="60" x2="320" y2="690" stroke="#d9cfbf" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="520" y1="60" x2="520" y2="690" stroke="#d9cfbf" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="720" y1="60" x2="720" y2="690" stroke="#d9cfbf" stroke-width="1" stroke-dasharray="3 3"/>
 
         <!-- Step 1 -->
-        <line x1="120" y1="90" x2="320" y2="90" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
-        <text x="220" y="85" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">① 點擊「用 Google 登入」</text>
+        <line x1="120" y1="90" x2="320" y2="90" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="220" y="85" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">① 點擊「用 Google 登入」</text>
 
         <!-- Step 2 -->
-        <line x1="320" y1="120" x2="120" y2="120" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
-        <text x="220" y="115" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">② 重新導向到 Google</text>
+        <line x1="320" y1="120" x2="120" y2="120" stroke="#2d6a3e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="220" y="115" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">② 重新導向到 Google</text>
 
         <!-- Step 3 -->
-        <line x1="120" y1="150" x2="520" y2="150" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
-        <text x="320" y="145" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">③ 跳到 Google 登入頁（含 client_id, scope, redirect_uri）</text>
+        <line x1="120" y1="150" x2="520" y2="150" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="320" y="145" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">③ 跳到 Google 登入頁（含 client_id, scope, redirect_uri）</text>
 
         <!-- Step 4 -->
-        <line x1="520" y1="180" x2="120" y2="180" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
-        <text x="320" y="175" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">④ 顯示登入畫面 + 「該 App 想存取你的 OOO」確認頁</text>
+        <line x1="520" y1="180" x2="120" y2="180" stroke="#2d6a3e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="320" y="175" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">④ 顯示登入畫面 + 「該 App 想存取你的 OOO」確認頁</text>
 
         <!-- Step 5 -->
-        <line x1="120" y1="210" x2="520" y2="210" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
-        <text x="320" y="205" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑤ 你登入 + 點擊「同意授權」</text>
+        <line x1="120" y1="210" x2="520" y2="210" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="320" y="205" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑤ 你登入 + 點擊「同意授權」</text>
 
         <!-- Step 6 -->
-        <rect x="450" y="225" width="140" height="40" fill="#0a0e1a" stroke="#fbbf24" rx="4"/>
-        <text x="520" y="248" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Google 產生</text>
-        <text x="520" y="262" fill="#fbbf24" font-family="JetBrains Mono" font-size="10" text-anchor="middle">Authorization Code</text>
+        <rect x="450" y="225" width="140" height="40" fill="#faf7f2" stroke="#b8860b" rx="4"/>
+        <text x="520" y="248" fill="#b8860b" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">Google 產生</text>
+        <text x="520" y="262" fill="#b8860b" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">Authorization Code</text>
 
         <!-- Step 7 -->
-        <line x1="520" y1="290" x2="120" y2="290" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
-        <text x="320" y="285" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑥ 重新導向回 App，網址帶 ?code=AUTH_CODE</text>
+        <line x1="520" y1="290" x2="120" y2="290" stroke="#2d6a3e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="320" y="285" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑥ 重新導向回 App，網址帶 ?code=AUTH_CODE</text>
 
         <!-- Step 8 -->
-        <line x1="120" y1="320" x2="320" y2="320" stroke="#4ade80" stroke-width="1.5" marker-end="url(#oAr)"/>
-        <text x="220" y="315" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑦ 瀏覽器把 code 交給 App</text>
+        <line x1="120" y1="320" x2="320" y2="320" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#oAr)"/>
+        <text x="220" y="315" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑦ 瀏覽器把 code 交給 App</text>
 
         <!-- Step 9 -->
-        <line x1="320" y1="350" x2="720" y2="350" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
-        <text x="520" y="345" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑧ 後端用 code + client_secret 換 Access Token</text>
+        <line x1="320" y1="350" x2="720" y2="350" stroke="#8b3a1e" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="345" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑧ 後端用 code + client_secret 換 Access Token</text>
 
         <!-- Step 10 -->
-        <line x1="720" y1="380" x2="320" y2="380" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
-        <text x="520" y="375" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑨ 回傳 Access Token + Refresh Token</text>
+        <line x1="720" y1="380" x2="320" y2="380" stroke="#8b3a1e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="375" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑨ 回傳 Access Token + Refresh Token</text>
 
         <!-- 標記重點區段 -->
-        <rect x="240" y="395" width="560" height="2" fill="#fbbf24"/>
-        <text x="520" y="415" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="2">— 以上為授權階段，以下為使用階段 —</text>
-        <rect x="240" y="430" width="560" height="2" fill="#fbbf24"/>
+        <rect x="240" y="395" width="560" height="2" fill="#b8860b"/>
+        <text x="520" y="415" fill="#b8860b" font-family="IBM Plex Mono" font-size="11" text-anchor="middle" letter-spacing="2">— 以上為授權階段，以下為使用階段 —</text>
+        <rect x="240" y="430" width="560" height="2" fill="#b8860b"/>
 
         <!-- Step 11 -->
-        <line x1="320" y1="460" x2="720" y2="460" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
-        <text x="520" y="455" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑩ 帶 Access Token 呼叫 API（例如：拿 Email 列表）</text>
+        <line x1="320" y1="460" x2="720" y2="460" stroke="#8b3a1e" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="455" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑩ 帶 Access Token 呼叫 API（例如：拿 Email 列表）</text>
 
         <!-- Step 12 -->
-        <line x1="720" y1="490" x2="320" y2="490" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
-        <text x="520" y="485" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑪ 回傳資料</text>
+        <line x1="720" y1="490" x2="320" y2="490" stroke="#8b3a1e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="485" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑪ 回傳資料</text>
 
         <!-- Step 13 -->
-        <line x1="320" y1="520" x2="120" y2="520" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
-        <text x="220" y="515" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑫ App 顯示資料給你</text>
+        <line x1="320" y1="520" x2="120" y2="520" stroke="#2d6a3e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oAr)"/>
+        <text x="220" y="515" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑫ App 顯示資料給你</text>
 
         <!-- Token 過期 -->
-        <rect x="240" y="555" width="560" height="2" fill="#fbbf24" stroke-dasharray="2 2"/>
-        <text x="520" y="575" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" text-anchor="middle" letter-spacing="2">— Access Token 過期後 —</text>
-        <rect x="240" y="585" width="560" height="2" fill="#fbbf24" stroke-dasharray="2 2"/>
+        <rect x="240" y="555" width="560" height="2" fill="#b8860b" stroke-dasharray="2 2"/>
+        <text x="520" y="575" fill="#b8860b" font-family="IBM Plex Mono" font-size="11" text-anchor="middle" letter-spacing="2">— Access Token 過期後 —</text>
+        <rect x="240" y="585" width="560" height="2" fill="#b8860b" stroke-dasharray="2 2"/>
 
         <!-- Step 14 -->
-        <line x1="320" y1="615" x2="720" y2="615" stroke="#ff6b4a" stroke-width="1.5" marker-end="url(#oArOrange)"/>
-        <text x="520" y="610" fill="#e8eaf0" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑬ 用 Refresh Token 換新的 Access Token（不需要你重登）</text>
+        <line x1="320" y1="615" x2="720" y2="615" stroke="#8b3a1e" stroke-width="1.5" marker-end="url(#oArOrange)"/>
+        <text x="520" y="610" fill="#2a2520" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑬ 用 Refresh Token 換新的 Access Token（不需要你重登）</text>
 
-        <line x1="720" y1="645" x2="320" y2="645" stroke="#ff6b4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
-        <text x="520" y="640" fill="#a8b0c4" font-family="JetBrains Mono" font-size="11" text-anchor="middle">⑭ 新的 Access Token</text>
+        <line x1="720" y1="645" x2="320" y2="645" stroke="#8b3a1e" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#oArOrange)"/>
+        <text x="520" y="640" fill="#5a4f44" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">⑭ 新的 Access Token</text>
 
-        <text x="450" y="680" fill="#6b7590" font-family="JetBrains Mono" font-size="10" text-anchor="middle">綠色 = 使用者參與　/　橘色 = 後端對後端通訊</text>
+        <text x="450" y="680" fill="#948877" font-family="IBM Plex Mono" font-size="10" text-anchor="middle">綠色 = 使用者參與　/　橘色 = 後端對後端通訊</text>
       </svg>
       <p class="diagram-caption">完整 14 個步驟。看似複雜，但每一步都在解決一個安全問題。</p>
     </div>

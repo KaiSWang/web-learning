@@ -6,7 +6,7 @@
 <title>Q7 — WebSocket 跟 HTTP 差在哪</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Noto+Serif+TC:wght;500;700&family=IBM+Plex+Mono:wght;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -56,64 +56,64 @@
       <svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="rtAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-            <path d="M0,0 L10,5 L0,10 z" fill="#ff6b4a"/>
+            <path d="M0,0 L10,5 L0,10 z" fill="#8b3a1e"/>
           </marker>
           <marker id="rtAr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-            <path d="M0,0 L10,5 L0,10 z" fill="#4ade80"/>
+            <path d="M0,0 L10,5 L0,10 z" fill="#2d6a3e"/>
           </marker>
         </defs>
 
         <!-- Long Polling -->
-        <text x="40" y="30" fill="#ff6b4a" font-family="JetBrains Mono" font-size="11" letter-spacing="2">① LONG POLLING · 長輪詢（最舊）</text>
-        <line x1="80" y1="60" x2="80" y2="120" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <line x1="820" y1="60" x2="820" y2="120" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <text x="80" y="55" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">Client</text>
-        <text x="820" y="55" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">Server</text>
+        <text x="40" y="30" fill="#8b3a1e" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">① LONG POLLING · 長輪詢（最舊）</text>
+        <line x1="80" y1="60" x2="80" y2="120" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <line x1="820" y1="60" x2="820" y2="120" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <text x="80" y="55" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">Client</text>
+        <text x="820" y="55" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">Server</text>
 
-        <line x1="80" y1="75" x2="820" y2="75" stroke="#ff6b4a" stroke-width="1" marker-end="url(#rtAr)"/>
-        <text x="450" y="71" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">請求 → 伺服器 hold 住，等到有訊息才回</text>
+        <line x1="80" y1="75" x2="820" y2="75" stroke="#8b3a1e" stroke-width="1" marker-end="url(#rtAr)"/>
+        <text x="450" y="71" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">請求 → 伺服器 hold 住，等到有訊息才回</text>
 
-        <line x1="820" y1="95" x2="80" y2="95" stroke="#ff6b4a" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#rtAr)"/>
-        <line x1="80" y1="115" x2="820" y2="115" stroke="#ff6b4a" stroke-width="1" marker-end="url(#rtAr)"/>
-        <text x="450" y="111" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">收到後立刻再發新請求（不斷重複）</text>
+        <line x1="820" y1="95" x2="80" y2="95" stroke="#8b3a1e" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#rtAr)"/>
+        <line x1="80" y1="115" x2="820" y2="115" stroke="#8b3a1e" stroke-width="1" marker-end="url(#rtAr)"/>
+        <text x="450" y="111" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">收到後立刻再發新請求（不斷重複）</text>
 
         <!-- SSE -->
-        <text x="40" y="160" fill="#fbbf24" font-family="JetBrains Mono" font-size="11" letter-spacing="2">② SSE · Server-Sent Events（伺服器推送事件）</text>
-        <line x1="80" y1="190" x2="80" y2="260" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <line x1="820" y1="190" x2="820" y2="260" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <text x="40" y="160" fill="#b8860b" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">② SSE · Server-Sent Events（伺服器推送事件）</text>
+        <line x1="80" y1="190" x2="80" y2="260" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <line x1="820" y1="190" x2="820" y2="260" stroke="#d9cfbf" stroke-dasharray="3 3"/>
 
-        <line x1="80" y1="200" x2="820" y2="200" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
-        <text x="450" y="196" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">建立連線（單方向，client → server 開啟）</text>
+        <line x1="80" y1="200" x2="820" y2="200" stroke="#b8860b" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <text x="450" y="196" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">建立連線（單方向，client → server 開啟）</text>
 
-        <line x1="820" y1="220" x2="80" y2="220" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
-        <line x1="820" y1="235" x2="80" y2="235" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
-        <line x1="820" y1="250" x2="80" y2="250" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#rtAr)"/>
-        <text x="450" y="245" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">伺服器持續推送（單向：server → client）</text>
+        <line x1="820" y1="220" x2="80" y2="220" stroke="#b8860b" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="235" x2="80" y2="235" stroke="#b8860b" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="250" x2="80" y2="250" stroke="#b8860b" stroke-width="1.5" marker-end="url(#rtAr)"/>
+        <text x="450" y="245" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">伺服器持續推送（單向：server → client）</text>
 
         <!-- WebSocket -->
-        <text x="40" y="295" fill="#4ade80" font-family="JetBrains Mono" font-size="11" letter-spacing="2">③ WEBSOCKET · 全雙工通訊（業界標準）</text>
-        <line x1="80" y1="325" x2="80" y2="395" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <line x1="820" y1="325" x2="820" y2="395" stroke="#2a3450" stroke-dasharray="3 3"/>
+        <text x="40" y="295" fill="#2d6a3e" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">③ WEBSOCKET · 全雙工通訊（業界標準）</text>
+        <line x1="80" y1="325" x2="80" y2="395" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <line x1="820" y1="325" x2="820" y2="395" stroke="#d9cfbf" stroke-dasharray="3 3"/>
 
-        <line x1="80" y1="335" x2="820" y2="335" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
-        <text x="450" y="331" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">HTTP Upgrade → 升級為 WebSocket（一次握手）</text>
+        <line x1="80" y1="335" x2="820" y2="335" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <text x="450" y="331" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">HTTP Upgrade → 升級為 WebSocket（一次握手）</text>
 
-        <line x1="80" y1="355" x2="820" y2="355" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
-        <line x1="820" y1="370" x2="80" y2="370" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
-        <line x1="80" y1="385" x2="820" y2="385" stroke="#4ade80" stroke-width="1.5" marker-end="url(#rtAr2)"/>
-        <text x="450" y="395" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">雙向自由通訊（兩邊隨時都能發）</text>
+        <line x1="80" y1="355" x2="820" y2="355" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <line x1="820" y1="370" x2="80" y2="370" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <line x1="80" y1="385" x2="820" y2="385" stroke="#2d6a3e" stroke-width="1.5" marker-end="url(#rtAr2)"/>
+        <text x="450" y="395" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">雙向自由通訊（兩邊隨時都能發）</text>
 
         <!-- WebRTC -->
-        <text x="40" y="430" fill="#c084fc" font-family="JetBrains Mono" font-size="11" letter-spacing="2">④ WEBRTC · 點對點傳輸（視訊通話）</text>
-        <line x1="80" y1="460" x2="80" y2="520" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <line x1="820" y1="460" x2="820" y2="520" stroke="#2a3450" stroke-dasharray="3 3"/>
-        <text x="80" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">User A</text>
-        <text x="820" y="455" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">User B</text>
+        <text x="40" y="430" fill="#6b4a8f" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">④ WEBRTC · 點對點傳輸（視訊通話）</text>
+        <line x1="80" y1="460" x2="80" y2="520" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <line x1="820" y1="460" x2="820" y2="520" stroke="#d9cfbf" stroke-dasharray="3 3"/>
+        <text x="80" y="455" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">User A</text>
+        <text x="820" y="455" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">User B</text>
 
-        <line x1="80" y1="475" x2="820" y2="475" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
-        <line x1="820" y1="495" x2="80" y2="495" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
-        <line x1="80" y1="515" x2="820" y2="515" stroke="#c084fc" stroke-width="2" marker-end="url(#rtAr)"/>
-        <text x="450" y="510" fill="#a8b0c4" font-family="JetBrains Mono" font-size="9" text-anchor="middle">使用者直接連使用者，不經過伺服器（適合視訊、檔案）</text>
+        <line x1="80" y1="475" x2="820" y2="475" stroke="#6b4a8f" stroke-width="2" marker-end="url(#rtAr)"/>
+        <line x1="820" y1="495" x2="80" y2="495" stroke="#6b4a8f" stroke-width="2" marker-end="url(#rtAr)"/>
+        <line x1="80" y1="515" x2="820" y2="515" stroke="#6b4a8f" stroke-width="2" marker-end="url(#rtAr)"/>
+        <text x="450" y="510" fill="#5a4f44" font-family="IBM Plex Mono" font-size="9" text-anchor="middle">使用者直接連使用者，不經過伺服器（適合視訊、檔案）</text>
       </svg>
     </div>
   </div>
@@ -154,7 +154,7 @@
           </p>
           <div class="flow-illustration">
 <span class="comment"># 客戶端（瀏覽器原生支援）</span><br>
-<span class="key">const</span> es = <span class="key">new</span> EventSource(<span style="color:#fbbf24">'/api/stream'</span>);<br>
+<span class="key">const</span> es = <span class="key">new</span> EventSource(<span style="color:#b8860b">'/api/stream'</span>);<br>
 es.onmessage = (e) =&gt; console.log(e.data);<br><br>
 <span class="comment"># 伺服器（每個 message 都是文字格式）</span><br>
 data: 新訊息 1<br>
@@ -188,12 +188,12 @@ data: 新訊息 2<br>
           </p>
           <div class="flow-illustration">
 <span class="comment"># 客戶端</span><br>
-<span class="key">const</span> ws = <span class="key">new</span> WebSocket(<span style="color:#fbbf24">'wss://example.com/chat'</span>);<br>
-ws.onopen = () =&gt; ws.send(<span style="color:#fbbf24">'Hello'</span>);<br>
+<span class="key">const</span> ws = <span class="key">new</span> WebSocket(<span style="color:#b8860b">'wss://example.com/chat'</span>);<br>
+ws.onopen = () =&gt; ws.send(<span style="color:#b8860b">'Hello'</span>);<br>
 ws.onmessage = (e) =&gt; console.log(e.data);<br><br>
 <span class="comment"># 伺服器（Node.js + ws 函式庫）</span><br>
-wss.on(<span style="color:#fbbf24">'connection'</span>, (ws) =&gt; {<br>
-&nbsp;&nbsp;ws.on(<span style="color:#fbbf24">'message'</span>, (msg) =&gt; {<br>
+wss.on(<span style="color:#b8860b">'connection'</span>, (ws) =&gt; {<br>
+&nbsp;&nbsp;ws.on(<span style="color:#b8860b">'message'</span>, (msg) =&gt; {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// 廣播給所有人</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;wss.clients.forEach(c =&gt; c.send(msg));<br>
 &nbsp;&nbsp;});<br>
